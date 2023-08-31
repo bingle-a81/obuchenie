@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import sec1
 import fr
 
@@ -77,34 +78,58 @@ class Cell:
         self.around_mines=around_mines
         self.mine=mine
         self.fl_open=True
+=======
+from string import ascii_lowercase, digits
 
-class GamePole:
-    def __init__(self,kol_cell,kol_mine) -> None:
-        self.kol_cell=kol_cell
-        self.kol_mine=kol_mine
-        self.pole=[[Cell() for x in range(self.kol_cell)] for y in range(self.kol_cell)]
-        self.inicial()
+CHARS = "абвгдеёжзийклмнопрстуфхцчшщьыъэюя " + ascii_lowercase
+CHARS_CORRECT = CHARS + CHARS.upper() + digits
+>>>>>>> abe962b (3w)
 
-    def inicial(self) :
-        a=0
-        while a <= self.kol_mine:
-            i=randint(0,self.kol_cell-1)
-            j=randint(0,self.kol_cell-1)
-            if self.pole[i][j].mine==True:
-                continue
-            self.pole[i][j].mine=True
-            a+=1
-        indx=(-1, -1), (-1, 0), (-1, 1), (0, -1), (0, 1), (1, -1), (1, 0), (1, 1)
-        for x in range(self.kol_cell):
-            for y in range(self.kol_cell):
-                if self.pole[x][y].mine==False:
-                    mines=sum(self.pole[x+i][y+j].mine for i,j in indx if (0<=x+i<self.kol_cell) and (0<=j+y<self.kol_cell))
-                    self.pole[x][y].around_mines=mines
+class TextInput:
+    
+    def __init__(self,name,size=10,):
+        self.name = name
+        self.size = size
+        if not (self.check_name(self.name) and 3<self.size<50):
+            raise ValueError("некорректное поле name")
 
-    def show(self):
-        for row in self.pole:
-            print(*map(lambda x:'%' if x.fl_open==False else x.around_mines if x.mine==False else '*',row))
+    def get_html(self):
+        return f"<p class='login'>{self.name}: <input type='text' size={self.size} />"
+    
+    @classmethod
+    def check_name(cls, name):
+        if not all(x for x in name if x in CHARS_CORRECT):
+            return
 
+    
+
+<<<<<<< HEAD
 d=GamePole(30,90)
 d.show()
 >>>>>>> 33768e2 (4)
+=======
+class PasswordInput:
+
+    def __init__(self,name,size=10,):
+        self.name = name
+        self.size = size
+
+    def get_html(self):
+        return f"<p class='password'>{self.name}: <input type='text' size={self.size} />"
+
+# здесь объявляйте классы TextInput и PasswordInput
+
+
+class FormLogin:
+    def __init__(self, lgn, psw):
+        self.login = lgn
+        self.password = psw
+
+    def render_template(self):
+        return "\n".join(['<form action="#">', self.login.get_html(), self.password.get_html(), '</form>'])
+
+
+# эти строчки не менять
+login = FormLogin(TextInput("Логин"), PasswordInput("Пароль"))
+html = login.render_template()
+>>>>>>> abe962b (3w)
