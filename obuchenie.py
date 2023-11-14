@@ -1,6 +1,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import sec1
 import fr
 
@@ -118,18 +119,35 @@ class PasswordInput:
         return f"<p class='password'>{self.name}: <input type='text' size={self.size} />"
 
 # здесь объявляйте классы TextInput и PasswordInput
+=======
+class ListObject:
+    def __init__(self,next_obj,data):
+        self.next_obj = next_obj
+        self.data = data
+
+    def link(self,obj):
+        self.next_obj = obj
+>>>>>>> 243e4b7 (rrr)
 
 
-class FormLogin:
-    def __init__(self, lgn, psw):
-        self.login = lgn
-        self.password = psw
+lst_in = ['1. Первые шаги в ООП',
+          '1.1 Как правильно проходить этот курс',
+          '1.2 Концепция ООП простыми словами',
+          '1.3 Классы и объекты. Атрибуты классов и объектов',
+          '1.4 Методы классов. Параметр self',
+          '1.5 Инициализатор init и финализатор del',
+          '1.6 Магический метод new. Пример паттерна Singleton',
+          '1.7 Методы класса (classmethod) и статические методы (staticmethod)']
 
-    def render_template(self):
-        return "\n".join(['<form action="#">', self.login.get_html(), self.password.get_html(), '</form>'])
+head_obj=ListObject(None,lst_in[0])
 
+for i in range(1,len(lst_in)):
+    ListObject(head_obj,lst_in[i])
 
+<<<<<<< HEAD
 # эти строчки не менять
 login = FormLogin(TextInput("Логин"), PasswordInput("Пароль"))
 html = login.render_template()
 >>>>>>> abe962b (3w)
+=======
+>>>>>>> 243e4b7 (rrr)
