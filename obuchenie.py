@@ -17,7 +17,9 @@ class Dialog:
             d=DialogLinux()
             setattr(d,'name',args)
         return d
-        
+
+
+print(DialogWindows.name_class)
 
 
 
