@@ -1,21 +1,43 @@
-from string import ascii_lowercase, digits
-import  re
+class Data:
+    def __init__(self,data:str,ip:int):
+        self.data=data
+        self.ip=ip
 
-class CardCheck:
-    @staticmethod
-    def check_card_number(number):
-        if not re.fullmatch(r'^[0-9]{4}\-[0-9]{4}\-[0-9]{4}\-[0-9]{4}', number):
-            return False
-        return True
+class Server :
+    IP=0
+    def __init__(self):
+        self.IP=__class__.getIP()
+        self.buffer=[]
+        self.router=None
+
+
+    @classmethod
+    def getIP(cls)->str:
+        cls.IP+=1
+        return cls.IP  
+
+    def send_data(self,data:Data):
+        Router.buffer.append(data)
+
+
+class Router :
+    buffer=[]
+
+    def link(self,server:Server):
+        server.router=self
+
+    def unlink(self,server:Server):
+        server.router=None
     
-    @staticmethod
-    def check_name(name):
-        if not re.fullmatch(r'[A-Z]+\s+[A-Z]', name):
-            return False
-        return True
+    def send_data(self,data:Data):
         
-print(re.fullmatch(r'[0-9]{2}', "12"))
-# is_number = CardCheck.check_card_number("1234-5678-9012-0000")
-# is_name = CardCheck.check_name("SERGEI BALAKIREV")
-# print(is_number, is_name)
+
+
+
+    
+
+
+
+
+
 
