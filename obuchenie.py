@@ -1,130 +1,109 @@
-class Data:
-    def __init__(self,data:str,ip:int):
-        self.data=data
-        self.ip=ip
+class ObjList:
+    def __init__(self,data):
+        self.__next=None
+        self.__prev=None
+        self.__data=data
 
-class Server :
-    IP=0
+    def set_next(self, obj):
+        self.__next=obj
+
+    def set_prev(self, obj):
+        self.__prev=obj
+
+    def set_data(self, data):
+        self.__data=data
+
+    def get_next(self):
+        return self.__next
+    
+    def get_prev(self):
+        return self.__prev
+    
+    def get_data(self):
+        return self.__data
+
+
+class LinkedList:
     def __init__(self):
-        self.IP=__class__.getIP()
-        self.buffer=[]
-        self.router=None
+        self.head = None
+        self.tail = None
+        
+    def add_obj(self, obj:ObjList):
+        prt=obj
+        self.tail=prt
+        prt.set_prev(self.tail)
+        self.tail.set_next(prt)
 
-
-    @classmethod
-    def getIP(cls)->int:
-        cls.IP+=1
-        return cls.IP  
-
-    def send_data(self,data:Data):
-
-        self.router.buffer.append(data)
-
+    def remove_obj(self, obj):
+        self.tail=None
 
     def get_data(self):
-        a=self.buffer[:]
-        self.buffer.clear()
-        return a
+        return self.head
 
 
-    def   get_ip(self):
-        return self.IP
 
 
-class Router :
-    def __init__(self) :
-        self.buffer=[]
-        self.servers=[]
-
-    def link(self,server:Server):
-        server.router=self
-        self.servers.append(server)
+ob = ObjList("данные 1")
+lst = LinkedList()
+lst.add_obj(ObjList("данные 1"))
+lst.add_obj(ObjList("данные 2"))
+lst.add_obj(ObjList("данные 3"))
+res = lst.get_data()    # ['данные 1', 'данные 2', 'данные 3']
 
 
-    def unlink(self,server:Server):
-        server.router=None
-        self.servers.remove(server)
+ls = LinkedList()
+ls.add_obj(ObjList("данные 1"))
+ls.add_obj(ObjList("данные 2"))
+ls.add_obj(ObjList("данные 3"))
+ls.add_obj(ObjList("данные 34"))
+assert ls.get_data() == ['данные 1', 'данные 2', 'данные 3', 'данные 34'], "метод get_data вернул неверные данные"
+
+ls_one = LinkedList()
+ls_one.add_obj(ObjList(1))
+assert ls_one.get_data() == [1], "метод get_data вернул неверные данные"
+
+h = ls_one.head
+n = 0
+while h:
+    n += 1
+    h = h.get_next()
     
-    def send_data(self):
-        for data in self.buffer:
-            for server in self.servers:
-                if data.ip==server.get_ip():
-                    server.buffer.append(data)
-        self.buffer.clear()
+assert n == 1, "неверное число объектов в списке: возможно некорректно работает метод add_obj"
+ls_one.remove_obj()
+assert ls_one.get_data() == [], "метод get_data вернул неверные данные для пустого списка, возможно, неверно работает метод remove_obj"
 
-# router = Router()
-# sv_from = Server()
+ls2 = LinkedList()
+assert ls.head != ls2.head, "атрибут head должен принадлежать объекту класса LinkedList, а не самому классу"
+assert ls.tail != ls2.tail, "атрибут tail должен принадлежать объекту класса LinkedList, а не самому классу"
 
-# router.link(sv_from)
-# print(sv_from.router)
-# router.unlink(sv_from)
-
-# print(sv_from.router)
-
-
-# quit (-1)  
-
-# router = Router()
-# sv_from = Server()
-# sv_from2 = Server()
-
-# router.link(sv_from)
-
-# router.link(sv_from2)
-# router.link(Server())
-# router.link(Server())
-# sv_to = Server()
-# router.link(sv_to)
-# sv_from.send_data(Data("Hello", sv_to.get_ip()))
-# sv_from2.send_data(Data("Hello", sv_to.get_ip()))
-# sv_from2.send_data(Data("Hello", sv_to.get_ip()))
-# sv_from2.send_data(Data("Hello", sv_to.get_ip()))
-
-# sv_to.send_data(Data("Hi", sv_from.get_ip()))
-# router.send_data()
-
-
-# msg_lst_from = sv_from.get_data()
-# msg_lst_to = sv_to.get_data()
-# print(sv_to.get_data())
-# print(sv_from.get_data())
-
+h = ls.head
+n = 0
+while h:
+    n += 1
+    h = h.get_next()
     
+assert n == 4, "неверное число объектов в списке: возможно некорректно работает метод add_obj"
 
+h = ls.head
+n = 0
+while h:
+    h = h._ObjList__next
+    n += 1
+    
+assert n == 4, "неверное число объектов в списке: возможно некорректные значения в атрибутах __next"    
 
+h = ls.tail
+n = 0
+while h:
+    n += 1
+    h = h.get_prev()
 
-assert hasattr(Router, 'link') and hasattr(Router, 'unlink') and hasattr(Router, 'send_data'), "в классе Router присутсвутю не все методы, указанные в задании"
-assert hasattr(Server, 'send_data') and hasattr(Server, 'get_data') and hasattr(Server, 'get_ip'), "в классе Server присутсвутю не все методы, указанные в задании"
+assert n == 4, "неверное число объектов в списке: возможно некорректно работает метод add_obj"
 
-router = Router()
-sv_from = Server()
-sv_from2 = Server()
-router.link(sv_from)
-router.link(sv_from2)
-router.link(Server())
-router.link(Server())
-sv_to = Server()
-router.link(sv_to)
-sv_from.send_data(Data("Hello", sv_to.get_ip()))
-sv_from2.send_data(Data("Hello", sv_to.get_ip()))
-sv_to.send_data(Data("Hi", sv_from.get_ip()))
-router.send_data()
-msg_lst_from = sv_from.get_data()
-msg_lst_to = sv_to.get_data()
-
-assert len(router.buffer) == 0, "после отправки сообщений буфер в роутере должен очищаться"
-assert len(sv_from.buffer) == 0, "после получения сообщений буфер сервера должен очищаться"
-
-assert len(msg_lst_to) == 2, "метод get_data вернул неверное число пакетов"
-
-assert msg_lst_from[0].data == "Hi" and msg_lst_to[0].data == "Hello", "данные не прошли по сети, классы не функционируют должным образом"
-
-assert hasattr(router, 'buffer') and hasattr(sv_to, 'buffer'), "в объектах классов Router и/или Server отсутствует локальный атрибут buffer"
-
-router.unlink(sv_to)
-sv_from.send_data(Data("Hello", sv_to.get_ip()))
-router.send_data()
-msg_lst_to = sv_to.get_data()
-assert msg_lst_to == [], "метод get_data() вернул неверные данные, возможно, неправильно работает метод unlink()"
-
-
+h = ls.tail
+n = 0
+while h:
+    h = h._ObjList__prev
+    n += 1
+    
+assert n == 4, "неверное число объектов в списке: возможно некорректные значения в атрибутах __prev"
