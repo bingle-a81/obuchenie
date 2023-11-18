@@ -29,37 +29,60 @@ class LinkedList:
         self.tail = None
         
     def add_obj(self, obj:ObjList):
-        prt=obj
-        self.tail=prt
-        prt.set_prev(self.tail)
-        self.tail.set_next(prt)
+        if self.head is None:
+            self.head=obj
+            self.tail=obj
+            return
+        n=self.head
+        while n.get_next() :
+            n=n.get_next()
+        new_obj=obj
+        n.set_next(new_obj)
+        self.tail=new_obj
+        new_obj.set_prev(n)
+        return
 
-    def remove_obj(self, obj):
-        self.tail=None
+    def remove_obj(self):
+        if self.head is None:
+            print("List has no element")
+            return
+        if self.head.get_next() is None:
+            self.head=None
+            return
+        n=self.head
+        while n.get_next():
+            n=n.get_next()
+        n.get_prev().set_next(None)
+
+
 
     def get_data(self):
-        return self.head
+        d=[]
+        if self.head is None:
+            return []
+        else:
+            n=self.head
+            d.append(n.get_data())
+            while n.get_next():                    
+                n=n.get_next()
+                d.append(n.get_data())
+        return d
 
 
-
-
-ob = ObjList("данные 1")
-lst = LinkedList()
-lst.add_obj(ObjList("данные 1"))
-lst.add_obj(ObjList("данные 2"))
-lst.add_obj(ObjList("данные 3"))
-res = lst.get_data()    # ['данные 1', 'данные 2', 'данные 3']
 
 
 ls = LinkedList()
+
 ls.add_obj(ObjList("данные 1"))
 ls.add_obj(ObjList("данные 2"))
 ls.add_obj(ObjList("данные 3"))
 ls.add_obj(ObjList("данные 34"))
+
 assert ls.get_data() == ['данные 1', 'данные 2', 'данные 3', 'данные 34'], "метод get_data вернул неверные данные"
 
 ls_one = LinkedList()
 ls_one.add_obj(ObjList(1))
+
 assert ls_one.get_data() == [1], "метод get_data вернул неверные данные"
 
 h = ls_one.head
@@ -70,6 +93,7 @@ while h:
     
 assert n == 1, "неверное число объектов в списке: возможно некорректно работает метод add_obj"
 ls_one.remove_obj()
+
 assert ls_one.get_data() == [], "метод get_data вернул неверные данные для пустого списка, возможно, неверно работает метод remove_obj"
 
 ls2 = LinkedList()
