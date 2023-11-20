@@ -1,133 +1,37 @@
-class ObjList:
-    def __init__(self,data):
-        self.__next=None
-        self.__prev=None
-        self.__data=data
+from string import ascii_letters,digits
+import random
 
-    def set_next(self, obj):
-        self.__next=obj
+CHARS=ascii_letters+ascii_letters.upper()+digits+'_.'
 
-    def set_prev(self, obj):
-        self.__prev=obj
-
-    def set_data(self, data):
-        self.__data=data
-
-    def get_next(self):
-        return self.__next
-    
-    def get_prev(self):
-        return self.__prev
-    
-    def get_data(self):
-        return self.__data
-
-
-class LinkedList:
-    def __init__(self):
-        self.head = None
-        self.tail = None
+class EmailValidator():
+    def __new__(cls,*args,**kwargs) :
+        return None
         
-    def add_obj(self, obj:ObjList):
-        if self.head is None:
-            self.head=obj
-            self.tail=obj
-            return
-        n=self.head
-        while n.get_next() :
-            n=n.get_next()
-        new_obj=obj
-        n.set_next(new_obj)
-        self.tail=new_obj
-        new_obj.set_prev(n)
-        return
+    @classmethod
+    def get_random_email(cls):
+        return ''.join(CHARS[random.randint(0,len(CHARS)-1)] for x in range(random.randint(1,100)))+'@gmail.com'
 
-    def remove_obj(self):
-        if self.head is None:
-            print("List has no element")
-            return
-        if self.head.get_next() is None:
-            self.head=None
-            return
-        n=self.head
-        while n.get_next():
-            n=n.get_next()
-        n.get_prev().set_next(None)
+    @classmethod
+    def check_email(cls, email):
+        if not EmailValidator.__is_email_str(email):
+            return False
+        a=email.split('@')
+        b=a[1].split('.')
+        c='..' in a[0]
+        if all([len(a)==2,1<len(a[0])<101,1<len(a[1])<51,len(b)==2,not c]):
+            return True
+        return False
+        
 
+    @staticmethod
+    def __is_email_str(email):
+        return True if type(email)==str else False
 
+assert EmailValidator.check_email("sc_lib@list.ru") == True and EmailValidator.check_email("sc_lib@list_ru") == False and EmailValidator.check_email("sc@lib@list_ru") == False and EmailValidator.check_email("sc.lib@list_ru") == False and EmailValidator.check_email("sclib@list.ru") == True and EmailValidator.check_email("sc.lib@listru") == False and EmailValidator.check_email("sc..lib@list.ru") == False, "метод check_email отработал некорректно"
 
-    def get_data(self):
-        d=[]
-        if self.head is None:
-            return []
-        else:
-            n=self.head
-            d.append(n.get_data())
-            while n.get_next():                    
-                n=n.get_next()
-                d.append(n.get_data())
-        return d
+m = EmailValidator.get_random_email()
+assert EmailValidator.check_email(m) == True, "метод check_email забраковал сгенерированный email методом get_random_email"
 
+assert EmailValidator() is None, "при создании объекта класса EmailValidator возвратилось значение отличное от None"
 
-
-
-ls = LinkedList()
-
-ls.add_obj(ObjList("данные 1"))
-ls.add_obj(ObjList("данные 2"))
-ls.add_obj(ObjList("данные 3"))
-ls.add_obj(ObjList("данные 34"))
-
-assert ls.get_data() == ['данные 1', 'данные 2', 'данные 3', 'данные 34'], "метод get_data вернул неверные данные"
-
-ls_one = LinkedList()
-ls_one.add_obj(ObjList(1))
-
-assert ls_one.get_data() == [1], "метод get_data вернул неверные данные"
-
-h = ls_one.head
-n = 0
-while h:
-    n += 1
-    h = h.get_next()
-    
-assert n == 1, "неверное число объектов в списке: возможно некорректно работает метод add_obj"
-ls_one.remove_obj()
-
-assert ls_one.get_data() == [], "метод get_data вернул неверные данные для пустого списка, возможно, неверно работает метод remove_obj"
-
-ls2 = LinkedList()
-assert ls.head != ls2.head, "атрибут head должен принадлежать объекту класса LinkedList, а не самому классу"
-assert ls.tail != ls2.tail, "атрибут tail должен принадлежать объекту класса LinkedList, а не самому классу"
-
-h = ls.head
-n = 0
-while h:
-    n += 1
-    h = h.get_next()
-    
-assert n == 4, "неверное число объектов в списке: возможно некорректно работает метод add_obj"
-
-h = ls.head
-n = 0
-while h:
-    h = h._ObjList__next
-    n += 1
-    
-assert n == 4, "неверное число объектов в списке: возможно некорректные значения в атрибутах __next"    
-
-h = ls.tail
-n = 0
-while h:
-    n += 1
-    h = h.get_prev()
-
-assert n == 4, "неверное число объектов в списке: возможно некорректно работает метод add_obj"
-
-h = ls.tail
-n = 0
-while h:
-    h = h._ObjList__prev
-    n += 1
-    
-assert n == 4, "неверное число объектов в списке: возможно некорректные значения в атрибутах __prev"
+assert EmailValidator._EmailValidator__is_email_str('abc'), "метод __is_email_str() вернул False для строки"
