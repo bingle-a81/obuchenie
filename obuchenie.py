@@ -1,100 +1,72 @@
-class TreeObj:
-    def __init__(self,indx:int,value=None,):
-        self.indx = indx
-        self.value = value
-        self.__left=None
-        self.__right=None
+
+class RadiusVector2D:
+    MIN_COORD = -100
+    MAX_COORD = 1024
+
+    def __init__(self,x=0.,y=0.):
+        self.__x = self.__y = 0
+        if self.__cheak(x):
+            self.__x = x
+        if self.__cheak(y):
+            self.__y = y
+        
+
+    def __cheak(self, value)-> bool:
+        if not isinstance(value, (int, float)):
+            return False        
+        if not __class__.MIN_COORD <= value <= __class__.MAX_COORD:
+            return False
+        return True
+        
 
     @property
-    def left(self):        
-         return self.__left
-
-    @left.setter
-    def left(self,value):
-        self.__left = value
-
-
-    @property
-    def right(self):
-        return self.__right
-
-    @right.setter
-    def right(self,value):
-        self.__right = value
-
-
-class DecisionTree :
+    def x(self):
+        return self.__x
     
-    @classmethod
-    def predict(cls, root, x):
-        if root is None:
-            return None
-        n=root
-        while n:
-            obj_next=cls.get_next(n,x)
-            if obj_next is None:
-                break
-            n=obj_next
-        return n.value
+    @x.setter
+    def x(self, value):
+        if self.__cheak(value):
+            if self.__x != value:
+                self.__x = value
+
+    @property
+    def y(self):
+        return self.__y
+    
+    @y.setter
+    def y(self, value):
+        if self.__cheak(value):
+            if self.__y != value:
+                self.__y = value
+
+    @staticmethod
+    def norm2(vector):
+        return (vector.x ** 2 + vector.y ** 2)
+    
+
+r1 = RadiusVector2D()
+r2 = RadiusVector2D(1)
+r3 = RadiusVector2D(4, 5)
 
 
-    @classmethod
-    def add_obj(cls, obj, node=None, left=True):
-        if node:
-            if left:
-                node.left=obj
-            else:
-                node.right=obj
-        return obj
+assert hasattr(RadiusVector2D, 'MIN_COORD') and hasattr(RadiusVector2D, 'MAX_COORD'), "в классе RadiusVector2D должны присутствовать атрибуты MIN_COORD и MAX_COORD"
 
-    @classmethod
-    def get_next(cls, obj:TreeObj, x):
-        if x[obj.indx]==1:
-            return obj.left
-        else:
-            return obj.right
+assert type(RadiusVector2D.x) == property and type(RadiusVector2D.y) == property, "в классе RadiusVector2D должны присутствовать объекты-свойства x и y"
+
+assert r1.x == 0 and r1.y == 0 and r2.x == 1 and r2.y == 0 and r3.x == 4 and r3.y == 5, "свойства x и y возвращают неверные значения"
 
 
-# ВСЕ ПРОЦЕДУРЫ ПРОИСХОДЯТ через КЛАСС DecisionTree
 
-# Класс DecisionTree через метод add_obj и передаваемый ему класс TreeObj
-# с параметрами создает объект TreeObj со свойствами.
+assert RadiusVector2D.norm2(r3) == 41, "неверно вычисляется норма вектора"
 
-# В примере 3 объекта (это синие прямоугольники схемы)
-# делаем ссылку на переменную занятой ЯЧЕЙИ ПАМЯТИ этого нового объекта, для того, чтобы данной созданный объект
-# передавать (подкладывать) другому создаваемому объекту
+r4 = RadiusVector2D(4.5, 5.5)
+assert 4.4 < r4.x < 4.6 and 5.4 < r4.y < 5.6, "свойства x и y возвращают неверные значения"
 
-# ИЗНАЧАЛЬНО ПЕРЕДАВАЕМЫЙ ИНДЕКС В ОБЪЕКТЫ ДОЛЖЕН СООТВЕТСТВОВАТЬ ИЕРАРХИИ СТРОЕНИЯ ДЕРЕВА, Т.Е. ИЕРАРХИИ
-# СЛЕДОВАНИЯ ЭЛЕМЕНТОВ СПИСКА.
-root = DecisionTree.add_obj(TreeObj(0))
-print(type(root), root.__dict__)
-print()
-v_11 = DecisionTree.add_obj(TreeObj(1), root)
-print(type(root), root.__dict__)
-print(type(v_11), v_11.__dict__)
-print()
-v_12 = DecisionTree.add_obj(TreeObj(2), root, False)
-print(type(root), root.__dict__)  # тут уже видно, что присвоились 2 ветки
-print(type(v_11), v_11.__dict__)
-print(type(v_12), v_12.__dict__)
-# Эти 3 объекта существуют независимо друг от друга, но между ними есть ссылки
-# друг на друга. НЕ ПУТАТЬ с односвязным списком, где объекты хоть и были независимые,
-# НО ВОСПРИНИМАЛИСЬ МАТРЕШКОЙ объекта класса
+r5 = RadiusVector2D(-102, 2000)
 
-# аналогично создаются еще 4 независимых объекта (рыжие прямоугольники). Тут объекты - СОЗДАВАЕМЫЕ
-# ЯЧЕЙКИ ПАМЯТИ не присваиваем переменным как ссылки. Нет надобности им обращаться друг к другу.
-# При создании ссылки подкладываются от ранее созданных объектов (синие прямоугольники)
-DecisionTree.add_obj(TreeObj(-1, "будет программистом"), v_11)
-DecisionTree.add_obj(TreeObj(-1, "будет кодером"), v_11, False)
-DecisionTree.add_obj(TreeObj(-1, "не все потеряно"), v_12)
-DecisionTree.add_obj(TreeObj(-1, "безнадежен"), v_12, False)
+assert r5.x == 0 and r5.y == 0, "присвоение значений, выходящих за диапазон [-100; 1024] не должно выполняться"
 
-# здесь схема разбора(прохода) списка НЕ ПОСЛЕДОВАТЕЛЬНАЯ.
-# СПИСОК - позиционная структура дерева. Где каждому индексу соответствует свой уровень объектов
-# Если индекс 0 со значением 1, то переходим на индекс 1 и смотрим его значение (здесь 1)
-# Ели индекс 0 со значением 0, то переходим сразу на индекс 2 и смотрим его значение (здесь 0)
-x = [1, 1, 0]
-
-
-res = DecisionTree.predict(root, x) # будет программистом
-print(res)
+r = RadiusVector2D(10, 20)
+r.x = 'a'
+r.y = (1, 2)
+assert r.x == 10 and r.y == 20, "присвоение не числовых значений должно игнорироваться"
