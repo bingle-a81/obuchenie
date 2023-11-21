@@ -21,6 +21,8 @@ class StackObj:
         if  isinstance(next,(StackObj)) or next is None:
             self.__next = next
 
+            
+
 class Stack:
     def __init__(self):
         self.top = None
