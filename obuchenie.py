@@ -1,104 +1,58 @@
-class StackObj:
-    def __init__(self,data):
-        self.__data = data
-        self.__next = None
+class TreeObj:
+    def __init__(self,indx,value=None,):
+        self._indx = indx
+        self.__value = value
+        self.__left=None
+        self.__right=None
 
     @property
-    def data(self):
-        return self.__data
-    
-    @data.setter
-    def data(self,data):
-        print(data)
-        self.__data = data
+    def left(self):        
+         return self.__left
+
+    @left.setter
+    def left(self,value):
+        self.__left = value
+
 
     @property
-    def next(self):
-        return self.__next
+    def right(self):
+        return self.__right
+
+    @right.setter
+    def right(self,value):
+        self.__right = value
+
+
+class DecisionTree :
     
-    @next.setter
-    def next(self,next):
-        if  isinstance(next,(StackObj)) or next is None:
-            self.__next = next
-
-            
-
-class Stack:
-    def __init__(self):
-        self.top = None
-
-    def push(self,obj:StackObj):
-        if self.top is None:
-            self.top = obj  
-            return
-        n=self.top
-        while n.next :
-            n=n.next      
-        n.next=obj      
-
-    def pop(self):
-        if self.top is None:
-            return []
-        
-        if self.top.next is None:
-            a=self.top
-            self.top=None
-            return a
+    @classmethod
+    def predict(cls, root, x):
+        if root is None:
+            return None
+        if x[root._indx] < root.value:
+            return cls.predict(root.left, x)
         else:
-            n = self.top
-            n1=self.top
-            while n.next :                
-                n1=n
-                n=n.next
-            a=n
-            n1.next=None
-            return a
-        
-    def get_data(self):
-        a=[]
-        if self.top is None:
-            return []
-        else:            
-            n = self.top
-            a.append(n.data)
-            while n.next :   
-                n=n.next             
-                a.append(n.data)                
-            return a
+            return cls.predict(root.right, x)
 
-s = Stack()
+    @classmethod
+    def add_obj(cls, obj, node=None, left=True):
+        if node is None:
+            node = TreeObj(obj)
+        else:
+            if obj[node._indx] < node.value:
+                cls.add_obj(obj, node.left, False)
+            else:
+                cls.add_obj(obj, node.right, True)
+        return node
 
-top = StackObj("obj_1")
-s.push(top)
-s.push(StackObj("obj_2"))
-s.push(StackObj("obj_3"))
-s.pop()
 
-res = s.get_data()
-assert res == ["obj_1", "obj_2"], f"метод get_data вернул неверные данные: {res}"
-assert s.top == top, "атрибут top объекта класса Stack содержит неверное значение"
+root = DecisionTree.add_obj(TreeObj(0))
+v_11 = DecisionTree.add_obj(TreeObj(1), root)
+v_12 = DecisionTree.add_obj(TreeObj(2), root, False)
+DecisionTree.add_obj(TreeObj(-1, "будет программистом"), v_11)
+DecisionTree.add_obj(TreeObj(-1, "будет кодером"), v_11, False)
+DecisionTree.add_obj(TreeObj(-1, "не все потеряно"), v_12)
+DecisionTree.add_obj(TreeObj(-1, "безнадежен"), v_12, False)
 
-h = s.top
-while h:
-    res = h.data
-    h = h.next
-
-s = Stack()
-top = StackObj("obj_1")
-s.push(top)
-s.pop()
-assert s.get_data() == [], f"метод get_data вернул неверные данные: {s.get_data()}"
-
-n = 0
-h = s.top
-while h:
-    h = h.next
-    n += 1
-    
-assert n == 0, "при удалении всех объектов, стек-подобная стурктура оказалась не пустой"
-
-s = Stack()
-top = StackObj("name_1")
-s.push(top)
-obj = s.pop()
-assert obj == top, "метод pop() должен возвращать удаляемый объект"
+x = [1, 1, 0]
+res = DecisionTree.predict(root, x)
