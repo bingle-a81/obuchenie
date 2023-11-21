@@ -9,36 +9,24 @@ class TreeObj:
         self.__right=None
 
     @property
-    def left(self):        
-         return self.__left
-
-    @left.setter
-    def left(self,value):
-        self.__left = value
-
+    def x(self):
+        return self.__x
+    
+    @x.setter
+    def x(self, value):
+        if self.__cheak(value):
+            if self.__x != value:
+                self.__x = value
 
     @property
-    def right(self):
-        return self.__right
-
-    @right.setter
-    def right(self,value):
-        self.__right = value
-
-
-class DecisionTree :
+    def y(self):
+        return self.__y
     
-    @classmethod
-    def predict(cls, root, x):
-        if root is None:
-            return None
-        n=root
-        while n:
-            obj_next=cls.get_next(n,x)
-            if obj_next is None:
-                break
-            n=obj_next
-        return n.value
+    @y.setter
+    def y(self, value):
+        if self.__cheak(value):
+            if self.__y != value:
+                self.__y = value
 
 
     @classmethod
