@@ -1,5 +1,10 @@
-list1 = [[1, 7, 8], [9, 7, 102], [6, 106, 105], [100, 99, 98, 103], [1, 2, 3]]
-maximum = -1
-maximum=max(max(x) for x in list1)
+def foo():
+    print('1')
+    yield
+    print('2')
+    yield
 
-print(maximum)
+
+for i in range(2):
+    next(foo())
+
