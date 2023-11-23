@@ -1,71 +1,76 @@
-class Thing:
-    def __init__(self,name, weight):
-        self.__name=''
-        self.__weight=0
+class Telecast:
+    def __init__(self,id,name, duration ):
+        self.uid = id
         self.name = name
-        self.weight = weight
+        self.duration = duration
 
     @property
-    def name(self): 
+    def name(self):
         return self.__name
-    
+
     @name.setter
-    def name(self, value):
-        if type(value) == str:
+    def name(self,value):
+        if type(value)==str:
             self.__name = value
-    
-    @property
-    def weight(self):
-        return self.__weight
-
-    @weight.setter
-    def weight(self, value):
-        if type(value) in (int,float):
-            self.__weight = value    
-
-
-class Bag:
-    def __init__(self, max_weight):
-        self.__max_weight=0
-        self.max_weight = max_weight
-        self.__things = []
-        self._weight=0
 
     @property
-    def max_weight(self):
-        return self.__max_weight
-    
-    @max_weight.setter
-    def max_weight(self, value):
-        if type(value) in (int,float):
-            self.__max_weight = value
+    def duration(self):
+        return self.__duration
+
+    @duration.setter
+    def duration(self,value):
+        if type(value)==int:
+            self.__duration = value
 
     @property
-    def things(self):
-        return self.__things
+    def uid(self):
+        return self.__id
 
-    
-    def add_thing(self, thing:Thing):
-        a= self._weight + thing.weight
-        if a < self.max_weight:
-            self._weight += thing.weight      
-            self.__things.append(thing)
+    @uid.setter
+    def uid(self,value):
+        if type(value)==int:
+            self.__id = value
 
 
-    def remove_thing(self, indx):
-        self._weight -= self.__things[indx].weight
-        self.__things.pop(indx)
-
-    def get_total_weight(self):
-        return self._weight
 
 
-bag = Bag(1000)
-bag.add_thing(Thing("Книга по Python", 100))
-bag.add_thing(Thing("Котелок", 500))
-bag.add_thing(Thing("Спички", 20))
-bag.add_thing(Thing("Бумага", 100))
-w = bag.get_total_weight()
-print(w)
-for t in bag.things:
-    print(f"{t.name}: {t.weight}")        
+class TVProgram:
+    def __init__(self,name):
+        self.name = name
+        self.items  = []
+
+    def add_telecast(self, tl):
+        self.items.append(tl)
+
+    def remove_telecast(self, indx):
+        for x in self.items:
+            if x.uid == indx:
+                self.items.remove(x)
+
+
+
+assert hasattr(TVProgram, 'add_telecast') and hasattr(TVProgram, 'remove_telecast'), "в классе TVProgram должны быть методы add_telecast и remove_telecast"
+
+pr = TVProgram("Первый канал")
+pr.add_telecast(Telecast(1, "Доброе утро", 10000))
+pr.add_telecast(Telecast(3, "Новости", 2000))
+t = Telecast(2, "Интервью с Балакиревым", 20)
+pr.add_telecast(t)
+
+pr.remove_telecast(3)
+assert len(pr.items) == 2, "неверное число телеперач, возможно, некорректно работает метод remove_telecast"
+assert pr.items[-1] == t, "удалена неверная телепередача (возможно, вы удаляете не по __id, а по порядковому индексу в списке items)"
+
+assert type(Telecast.uid) == property and type(Telecast.name) == property and type(Telecast.duration) == property, "в классе Telecast должны быть объекты-свойства uid, name и duration"
+
+for x in pr.items:
+    assert hasattr(x, 'uid') and hasattr(x, 'name') and hasattr(x, 'duration')
+
+assert pr.items[0].name == "Доброе утро", "объект-свойство name вернуло неверное значение"
+assert pr.items[0].duration == 10000, "объект-свойство duration вернуло неверное значение"
+
+t = Telecast(1, "Доброе утро", 10000)
+t.uid = 2
+t.name = "hello"
+t.duration = 10
+        
