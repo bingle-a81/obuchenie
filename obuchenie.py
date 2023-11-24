@@ -1,76 +1,90 @@
-class Telecast:
-    def __init__(self,id,name, duration ):
-        self.uid = id
-        self.name = name
-        self.duration = duration
+class AppVK :
+    def __init__(self):
+        self.name = "ВКонтакте"
 
-    @property
-    def name(self):
-        return self.__name
+class AppYouTube:
+    def __init__(self,memory_max):
+        self.name = "YouTube"
+        self.memory_max=memory_max
 
-    @name.setter
-    def name(self,value):
-        if type(value)==str:
-            self.__name = value
-
-    @property
-    def duration(self):
-        return self.__duration
-
-    @duration.setter
-    def duration(self,value):
-        if type(value)==int:
-            self.__duration = value
-
-    @property
-    def uid(self):
-        return self.__id
-
-    @uid.setter
-    def uid(self,value):
-        if type(value)==int:
-            self.__id = value
+class AppPhone:
+    def __init__(self,**kwargs):
+        self.name = "Phone"
+        self.phone_list = kwargs
 
 
+class SmartPhone:
+    def __init__(self,model):
+        self.model=model
+        self.apps=[]
 
 
-class TVProgram:
-    def __init__(self,name):
-        self.name = name
-        self.items  = []
+    def add_app(self,app):
+        for x in self.apps:
+            if x.name == app.name:
+                return
+        self.apps.append(app)
 
-    def add_telecast(self, tl):
-        self.items.append(tl)
+    def remove_app(self,app):
+        self.apps.remove(app)
 
-    def remove_telecast(self, indx):
-        for x in self.items:
-            if x.uid == indx:
-                self.items.remove(x)
+sm = SmartPhone("Honor 1.0")
+sm.add_app(AppVK())
+sm.add_app(AppVK())
+sm.add_app(AppVK())  # второй раз добавляться не должно
+sm.add_app(AppYouTube(2048))
+for a in sm.apps:
+    print(a.name)        
 
 
 
-assert hasattr(TVProgram, 'add_telecast') and hasattr(TVProgram, 'remove_telecast'), "в классе TVProgram должны быть методы add_telecast и remove_telecast"
+# TEST-TASK___________________________________
+try:
+    smart = SmartPhone("Honor 1.0")
+except:
+    print("шибка при создании объекта класса SmartPhone")
 
-pr = TVProgram("Первый канал")
-pr.add_telecast(Telecast(1, "Доброе утро", 10000))
-pr.add_telecast(Telecast(3, "Новости", 2000))
-t = Telecast(2, "Интервью с Балакиревым", 20)
-pr.add_telecast(t)
+try:
+    app_vk = AppVK()
+except:
+    print("шибка при создании объекта класса AppVK")
 
-pr.remove_telecast(3)
-assert len(pr.items) == 2, "неверное число телеперач, возможно, некорректно работает метод remove_telecast"
-assert pr.items[-1] == t, "удалена неверная телепередача (возможно, вы удаляете не по __id, а по порядковому индексу в списке items)"
+try:
+    app_you_tube = AppYouTube(2048)
+except:
+    print("шибка при создании объекта класса AppYouTube")
 
-assert type(Telecast.uid) == property and type(Telecast.name) == property and type(Telecast.duration) == property, "в классе Telecast должны быть объекты-свойства uid, name и duration"
+try:
+    app_phone = AppPhone({"Балакирев": 1234567890, "Сергей": 98450647365, "Работа": 112})
+except:
+    print("шибка при создании объекта класса AppPhone")
 
-for x in pr.items:
-    assert hasattr(x, 'uid') and hasattr(x, 'name') and hasattr(x, 'duration')
+assert hasattr(smart, "model") and hasattr(smart, "apps") and hasattr(smart, "add_app") and \
+       hasattr(smart, "remove_app"), "не все атрибуты и методы есть в объекте класса SmartPhone"
 
-assert pr.items[0].name == "Доброе утро", "объект-свойство name вернуло неверное значение"
-assert pr.items[0].duration == 10000, "объект-свойство duration вернуло неверное значение"
+assert hasattr(app_vk, "name"), "не все атрибуты и методы есть в объекте класса AppVK"
 
-t = Telecast(1, "Доброе утро", 10000)
-t.uid = 2
-t.name = "hello"
-t.duration = 10
-        
+assert hasattr(app_you_tube, "name") and hasattr(app_you_tube, "memory_max"), \
+    "не все атрибуты и методы есть в объекте класса AppYouTube"
+
+assert hasattr(app_phone, "name") and hasattr(app_phone, "phone_list"), \
+    "не все атрибуты и методы есть в объекте класса AppYouTube"
+
+assert type(app_phone.phone_list) is dict, "тип phone_list некорректный"
+
+assert type(smart.model) is str, "название должно быть строкой"
+assert type(smart.apps) is list, "apps должен быть списком"
+
+smart.add_app(app_vk)
+assert smart.apps[0] == app_vk, "некоректно сработал метод add_app"
+
+smart.remove_app(app_vk)
+assert len(smart.apps) == 0, "некоректно сработал метод remove_app"
+
+# При добавлении нового приложения проверять, что оно отсутствует в списке apps (отсутствует объект соответствующего класса).
+smart.add_app(app_vk)
+smart.add_app(AppVK())
+
+assert smart.apps.count(app_vk) == 1, \
+    "метод add_app отработал с ошибкой в списке несколько объектов одного и того же класса"
+print("Правильный ответ !!")
