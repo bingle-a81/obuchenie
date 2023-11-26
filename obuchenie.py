@@ -1,8 +1,9 @@
 class Circle:
     def __init__(self,x, y, radius):
-        self.x=x
-        self.y=y
-        self.radius=radius
+        # self.__x=self.__y=self.__radius=0
+        self.__x=x
+        self.__y=y
+        self.__radius=radius
 
     @property
     def x(self):
@@ -19,7 +20,7 @@ class Circle:
     
     @y.setter
     def y(self, value):
-        return self.__y
+        self.__y=value
     
     @property
     def radius(self):
@@ -27,15 +28,12 @@ class Circle:
     
     @radius.setter
     def radius(self, value):
-        return self.__radius
+        self.__radius=value
     
-    def __getattr__(self, item):
-        if isinstance(item, Circle):
-            return object.__getattribute__(self, item)
-        else:
-            return False
+
 
     def __setattr__(self, key, value):
+        print(f'setattr',key)
         if not isinstance(value, (int, float)):
             raise TypeError("Неверный тип присваиваемых данных.")
         else:
@@ -46,10 +44,18 @@ class Circle:
             elif key == '_Circle__radius' and value > 0:
                 object.__setattr__(self, key, value)
             else:
+                print('porn',self.__dict__)
                 pass
+
+    def __getattr__(self, item):
+        return False
         
-
-
+cr = Circle(20, 7, 22)
+cr1 = Circle(20, 7, 22)
+cr.x=50
+print(cr.__dict__)
+print(cr1.__dict__)
+quit(-1)
 
 assert type(Circle.x) == property and type(Circle.y) == property and type(Circle.radius) == property, "в классе Circle должны быть объявлены объекты-свойства x, y и radius"
 
