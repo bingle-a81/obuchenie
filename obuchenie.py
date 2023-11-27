@@ -1,70 +1,48 @@
-class Circle :
+class Dimensions:
+
+    MIN_DIMENSION = 10
+    MAX_DIMENSION = 1000
+
+    def __init__(self,a,b,c,):
+        self.a = a
+        self.b = b
+        self.c = c
+
+    @property
+    def a(self):
+        return self.__a
+    @a.setter
+    def a(self, value):
+        if __class__.__validete(value):
+            self.__a = value
+
+    @property
+    def b(self):
+        return self.__b
+    @b.setter
+    def b(self, value):
+        if __class__.__validete(value):
+            self.__b = value
+
+    @property
+    def c(self):
+        return self.__c
+    @c.setter
+    def c(self, value):
+        if __class__.__validete(value):
+            self.__c = value
+
+    @staticmethod
+    def __validete(a):
+        return __class__.MIN_DIMENSION<a<__class__.MAX_DIMENSION
     
-
-    def __init__(self,x,y,radius) -> None:
-        self.x=x
-        self.y=y
-        self.radius=radius
-
-    @property
-    def x(self):
-        return self.__x
-    @x.setter
-    def x(self, value):
-        self.__x = value
-        
-    @property
-    def y(self):
-        return self.__y
-    @y.setter
-    def y(self, value):
-        self.__y = value
-
-    @property
-    def radius(self):
-        return self.__radius
-    @radius.setter
-    def radius(self, value):
-        self.__radius = value
-
     def __setattr__(self, __name: str, __value) -> None:
-        if (__name in ('x','_Circle__y','_Circle__radius') ) and (not isinstance(__value, (int, float)) ):
-            raise TypeError("Неверный тип присваиваемых данных.")
-                   
-        if (__name == '_Circle__radius') and ( __value<=0):
-            return       
+        if __name in ('MIN_DIMENSION','MAX_DIMENSION'):
+            raise AttributeError("Менять атрибуты MIN_DIMENSION и MAX_DIMENSION запрещено.")
         object.__setattr__(self,__name,__value)
 
-    def __getattr__(self,item):
-        return False
-
-
-
-assert type(Circle.x) == property and type(Circle.y) == property and type(Circle.radius) == property, "в классе Circle должны быть объявлены объекты-свойства x, y и radius"
-
-try:
-    cr = Circle(20, '7', 22)
-except TypeError:
-    assert True
-else:
-    assert False, "не сгенерировалось исключение TypeError при инициализации объекта с недопустимыми аргументами"
-
-cr = Circle(20, 7, 22)
-assert cr.x == 20 and cr.y == 7 and cr.radius == 22, "объекты-свойства x, y и radius вернули неверные значения"
-
-cr.radius = -10 # прежнее значение не должно меняться, т.к. отрицательный радиус недопустим
-assert cr.radius == 22, "при присваивании некорректного значения, прежнее значение изменилось"
-
-x, y = cr.x, cr.y
-assert x == 20 and y == 7, "объекты-свойства x, y вернули некорректные значения"
-assert cr.name == False, "при обращении к несуществующему атрибуту должно возвращаться значение False"
-
-try:
-    cr.x = '20'
-except TypeError:
-    assert True
-else:
-    assert False, "не сгенерировалось исключение TypeError"
-    
-cr.y = 7.8
-cr.radius = 10.6      
+d = Dimensions(10.5, 20.1, 30)
+d.a = 8
+d.b = 15
+a, b, c = d.a, d.b, d.c  # a=10.5, b=15, c=30
+d.MAX_DIMENSION = 10  # исключение AttributeError
