@@ -1,61 +1,44 @@
-class Circle:
-    def __init__(self,x, y, radius):
-        # self.__x=self.__y=self.__radius=0
-        self.__x=x
-        self.__y=y
-        self.__radius=radius
+class Circle :
+    
+
+    def __init__(self,x,y,radius) -> None:
+        self.x=x
+        self.y=y
+        self.radius=radius
 
     @property
     def x(self):
         return self.__x
-    
     @x.setter
     def x(self, value):
-        self.__x=value
-
-    
+        self.__x = value
+        
     @property
     def y(self):
         return self.__y
-    
     @y.setter
     def y(self, value):
-        self.__y=value
-    
+        self.__y = value
+
     @property
     def radius(self):
-        return  self.__radius
-    
+        return self.__radius
     @radius.setter
     def radius(self, value):
-        self.__radius=value
-    
+        self.__radius = value
 
-
-    def __setattr__(self, key, value):
-        print(f'setattr',key)
-        if not isinstance(value, (int, float)):
+    def __setattr__(self, __name: str, __value) -> None:
+        if (__name in ('x','_Circle__y','_Circle__radius') ) and (not isinstance(__value, (int, float)) ):
             raise TypeError("Неверный тип присваиваемых данных.")
-        else:
-            if key == '_Circle__x':
-                object.__setattr__(self, key, value)
-            elif key == '_Circle__y':
-                object.__setattr__(self, key, value)
-            elif key == '_Circle__radius' and value > 0:
-                object.__setattr__(self, key, value)
-            else:
-                print('porn',self.__dict__)
-                pass
+                   
+        if (__name == '_Circle__radius') and ( __value<=0):
+            return       
+        object.__setattr__(self,__name,__value)
 
-    def __getattr__(self, item):
+    def __getattr__(self,item):
         return False
-        
-cr = Circle(20, 7, 22)
-cr1 = Circle(20, 7, 22)
-cr.x=50
-print(cr.__dict__)
-print(cr1.__dict__)
-quit(-1)
+
+
 
 assert type(Circle.x) == property and type(Circle.y) == property and type(Circle.radius) == property, "в классе Circle должны быть объявлены объекты-свойства x, y и radius"
 
@@ -84,4 +67,4 @@ else:
     assert False, "не сгенерировалось исключение TypeError"
     
 cr.y = 7.8
-cr.radius = 10.6
+cr.radius = 10.6      
