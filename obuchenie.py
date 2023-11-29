@@ -1,16 +1,19 @@
-class RenderList:
-    def __init__(self,type_list,):
-        if type_list =='ol':
-            self.type_list = 'ol'
+class ghost:
+    def __init__(self,a,):
+     self.a = a 
+
+    def __call__(self,z:int) :
+        if type(z)==int:
+            return self.a(z*5)
         else:
-            self.type_list='ul'
+            return f'type err'
 
-    def __call__(self, lst:list) -> str:
-        return f'<{self.type_list}>'+'\n'+'\n'.join('<li>'+x+'</li>' for x in lst )+f'\n</{self.type_list}>'
-    
-lst = ["Пункт меню 1", "Пункт меню 2", "Пункт меню 3"]
-render = RenderList("ol")
-html = render(lst)    
-print(html)
-                
+@ghost
+def ssum(t:int):
+    t=t+1
+    return t
 
+
+
+f=ssum(10)
+print(f)
