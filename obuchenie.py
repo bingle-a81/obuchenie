@@ -1,7 +1,5 @@
-
 class ObjList:
     def __init__(self,data,next=None,prev=None):
-        # self.__next=self.__prev=None
         self.data=data
         self.next=next
         self.prev=prev
@@ -37,6 +35,14 @@ class LinkedList:
         self.head = None
         self.tail = None
 
+    def __len__(self):
+        i=0
+        n=self.head
+        while n:
+            i+=1
+            n=n.next
+        return i       
+
     def add_obj(self, obj:ObjList):
         if self.head is None:
             self.head=obj
@@ -51,17 +57,33 @@ class LinkedList:
         new_obj.prev=n
         return  
 
-    def remove_obj(self):
-        if self.head is None:
-            print("List has no element")
+    def remove_obj(self,indx):
+        if indx>(len(self)-1):
+            raise IndexError
+        if indx==0:
+            if self.head.next is None:
+                self.head = None
+                self.tail = None
+                return
+            self.head = self.head.next
+            if self.head.next is None:
+                self.tail=self.head
+            self.head.prev = None
             return
-        if self.head.next is None:
-            self.head=None
-            return
-        n=self.head
-        while n.next:
+        i=1
+        n = self.head.next
+        while i<indx:
+            i+=1
             n=n.next
+        if n.next is None:
             n.prev.next=None
+            self.tail=n.prev
+        else:
+            n.prev.next=n.next
+            n.next.prev=n.prev
+
+
+
 
     def get_data(self):
         d=[]
@@ -75,6 +97,19 @@ class LinkedList:
                 d.append(n.data)
         return d
 
+
+
+    def __call__(self, indx) :
+        if indx>(len(self)-1):
+            raise IndexError
+        i=0
+        n=self.head      
+        while i<indx:
+            i+=1            
+            n=n.next
+            a=n.data
+        return a       
+
   
   
 ln = LinkedList()
@@ -84,8 +119,11 @@ ln.add_obj(ObjList("Python ООП"))
 ln.remove_obj(2)
 assert len(ln) == 2, "функция len вернула неверное число объектов в списке, возможно, неверно работает метод remove_obj()"
 ln.add_obj(ObjList("Python"))
+
+
 assert ln(2) == "Python", "неверное значение атрибута __data, взятое по индексу"
 assert len(ln) == 3, "функция len вернула неверное число объектов в списке"
+
 assert ln(1) == "Балакирев", "неверное значение атрибута __data, взятое по индексу"
 
 n = 0
@@ -105,4 +143,3 @@ while h:
     n += 1
 
 assert n == 3, "при перемещении по списку через __prev не все объекты перебрались"
-  
