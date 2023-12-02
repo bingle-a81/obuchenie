@@ -1,78 +1,88 @@
-class NewList:
-    def __init__(self,ls:list=None) -> None:
-        if ls is None:
-            self.ls=[]
-        else:
-            self.ls=list(ls)
+from operator import add,sub,mul,truediv
 
-    def __str__(self) -> str:
-        return ' '.join([str(x) for x in self.ls])
+class ListMath:
+    def __init__(self,lst_math:list=[]) -> None:
+        self.lst_math=lst_math
 
-    def get_list(self):
-        return self.ls
-
-    def __pop(self,a,b):
-        for x in b:
-            if x in a:
-                if type(x)==type(a[a.index(x)]):
-                    del(a[a.index(x)])
-                else:
-                    continue
-        return a
-
-
+    def foo(self,func,i):
+        ls=[x for x in self.lst_math if type(x) in (int,float) ]
+        return list(map(lambda x: func(x,i) ,ls))
+    
+    def foo_1(self,func,i):
+        ls=[x for x in self.lst_math if type(x) in (int,float) ]
+        return list(map(lambda x: func(i,x) ,ls))
+    
+    def __add__(self,other):
+        return ListMath(self.foo(add,other))
+    
+    def __radd__(self,other):
+        return ListMath(self.foo(add,other))
+    
+    def __iadd__(self,other):
+        self.lst_math=[add(x,other) for x in self.lst_math if type(x) in (int,float) ]
+ 
+    
     def __sub__(self,other):
-        if isinstance(other,NewList):
-            b=other.ls
-        elif isinstance(other,list):
-            b=other
-        else:
-            TypeError
-        a=list(self.ls)
-        return NewList(self.__pop(a,b))
-
-
-      
+        return ListMath(self.foo(sub,other))
     
     def __rsub__(self,other):
-        a=list(self.ls)
-        return NewList(self.__pop(other,a))
-
+        return ListMath(self.foo_1(sub,other))
+    
     def __isub__(self,other):
-        if isinstance(other,NewList):
-            b=other.ls
-        elif isinstance(other,list):
-            b=other
-        else:
-            TypeError
-        a=list(self.ls)
-        return NewList(self.__pop(a,b))
+        return ListMath(self.foo(sub,other))
 
-                
+    def __mul__(self,other):
+        return ListMath(self.foo(mul,other))
+    
+    def __rmul__(self,other):
+        return ListMath(self.foo(mul,other))
+    
+    def __imul__(self,other):
+        return ListMath(self.foo(mul,other))
 
-lst = NewList()
-lst1 = NewList([0, 1, -3.4, "abc", True])
-lst2 = NewList([1, 0, True])
+    def __truediv__(self,other):
+        return ListMath(self.foo(truediv,other))
+    
+    def __rtruediv__(self,other):
+        return ListMath(self.foo_1(truediv,other))
+    
+    def __itruediv__(self,other):
+        return ListMath(self.foo(mul,other))
+       
 
 
-assert lst1.get_list() == [0, 1, -3.4, "abc", True] and lst.get_list() == [], "метод get_list вернул неверный список"
-res1 = lst1 - lst2
-res2 = lst1 - [0, True]
-(print(res2))
-res3 = [1, 2, 3, 4.5] - lst2
-lst1 -= lst2
+    def __str__(self) -> str:
+        return ' '.join(str(x) for x in self.lst_math)
+    
 
-assert res1.get_list() == [-3.4, "abc"], "метод get_list вернул неверный список"
-assert res2.get_list() == [1, -3.4, "abc"], "метод get_list вернул неверный список"
+lst1 = ListMath()
+lp = [1, False, 2, -5, "abc", 7]
+lst2 = ListMath(lp)
+lst3 = ListMath(lp)
 
-assert res3.get_list() == [2, 3, 4.5], "метод get_list вернул неверный список"
-assert lst1.get_list() == [-3.4, "abc"], "метод get_list вернул неверный список"
+assert id(lst2.lst_math) != id(lst3.lst_math), "внутри объектов класса ListMath должна создаваться копия списка"
 
-lst_1 = NewList([1, 0, True, False, 5.0, True, 1, True, -7.87])
-lst_2 = NewList([10, True, False, True, 1, 7.87])
-res = lst_1 - lst_2
-assert res.get_list() == [0, 5.0, 1, True, -7.87], "метод get_list вернул неверный список"
+assert lst1.lst_math == [] and lst2.lst_math == [1, 2, -5, 7], "неверные значения в списке объекта класса ListMath"
 
-a = NewList([2, 3])
-res_4 = [1, 2, 2, 3] - a # NewList: [1, 2]
-assert res_4.get_list() == [1, 2], "метод get_list вернул неверный список"
+res1 = lst2 + 76
+lst = ListMath([1, 2, 3])
+lst += 5
+assert lst.lst_math == [6, 7, 8] and res1.lst_math == [77, 78, 71, 83], "неверные значения, полученные при операциях сложения"
+
+lst = ListMath([0, 1, 2])
+res3 = lst - 76
+res4 = 7 - lst
+assert res3.lst_math == [-76, -75, -74] and res4.lst_math == [7, 6, 5], "неверные значения, полученные при операциях вычитания"
+
+lst -= 3
+assert lst.lst_math == [-3, -2, -1], "неверные значения, полученные при операции вычитания -="
+
+lst = ListMath([1, 2, 3])
+res5 = lst * 5
+res6 = 3 * lst
+lst *= 4
+assert res5.lst_math == [5, 10, 15] and res6.lst_math == [3, 6, 9], "неверные значения, полученные при операциях умножения"
+assert lst.lst_math == [4, 8, 12], "неверные значения, полученные при операциях умножения"
+
+lst = lst / 2
+lst /= 13.0
