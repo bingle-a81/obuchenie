@@ -1,49 +1,21 @@
-class StackObj:
-    def __init__(self,data,next=None):
-        self.data = data
-        self.next = next
+class Box3D:
+    def __init__(self,width,height,depth,):
+        self.width = width
+        self.height = height
+        self.depth = depth
 
-class Stack:
-    def __init__(self) -> None:
-        self.top=None
-
-    def push_back(self, obj:StackObj):
-        if self.top is None:
-            self.top=obj
-            return
-        n=self.top
-        while n.next is not None:
-            n=n.next
-        n.next=obj
-        return  
-    
-    def pop_back(self):
-        if self.top is None:
-            raise ValueError
-        if self.top.next is None:
-            self.top=None
-            return
-        else:
-            n=self.top
-            while n.next is not None:
-                a=n
-                n=n.next
-            a.next=None
-            return
-    
-    def __len__(self):
-        i=0
-        n=self.top
-        while n:
-            i+=1
-            n=n.next
-        return i      
+    def __add__(self,other):
+        return
 
 
-st = Stack()
-st.push_back(StackObj('jj'))
-st.push_back(StackObj('jj'))
-st.push_back(StackObj('jj'))
-st.push_back(StackObj('jj'))
-st.pop_back()
-print(len(st))
+
+
+box1 = Box3D(1, 2, 3)
+box2 = Box3D(2, 4, 6)
+
+box = box1 + box2 # Box3D: width=3, height=6, depth=9 (соответствующие размерности складываются)
+box = box1 * 2    # Box3D: width=2, height=4, depth=6 (каждая размерность умножается на 2)
+box = 3 * box2    # Box3D: width=6, height=12, depth=18
+box = box2 - box1 # Box3D: width=1, height=2, depth=3 (соответствующие размерности вычитаются)
+box = box1 // 2   # Box3D: width=0, height=1, depth=1 (соответствующие размерности целочисленно делятся на 2)
+box = box2 % 3    # Box3D: width=2, height=1, depth=0
