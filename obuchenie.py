@@ -32,7 +32,7 @@ class MaxPooling:
         for i in range(output_rows):
             for j in range(output_cols):
                 window = [matrix[i * self.step[0] + di][j * self.step[0]+ dj]
-                            for di in range(self.size[0]) for dj in range(self.size[0])]
+                for di in range(self.size[0]) for dj in range(self.size[0])]
                 res[i][j] = max(window)
 
         return res
