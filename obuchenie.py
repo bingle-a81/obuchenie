@@ -14,26 +14,29 @@ class MaxPooling:
 
 
     def __call__(self, matrix) :
-        lst = []
         self.__check(matrix)
-        count = len(matrix)//self.step[0]
-        s = 0
-        for i in range(0, len(matrix), self.step[0]):
-            if count == s:
-                break
-            for j in range(0, len(matrix[i]), self.step[0]):
-                b = matrix[i][j:j+self.size[0]]
-                if len(b) == self.size[0]:
-                    lst.append(b)
-                c = matrix[i+1][j:j+self.size[0]]
-                if len(c) == self.size[0]:
-                    lst[-1].extend(c)
-            s += 1
-        res=[]        
-        lst1 = list(map(lambda x: max(x), lst))
-        for i in range(0, len(lst1),self.step[0]):
-            res.append(lst1[i:i+self.step[0]])
+        rows = len(matrix)
+        cols = len(matrix[0]) if rows > 0 else 0
+
+        # Размер выходного массива
+        rows = len(matrix)
+        cols = len(matrix[0]) if rows > 0 else 0
+
+        # Размер выходного массива
+        output_rows = (rows - self.size[0]) // self.step[0] + 1
+        output_cols = (cols - self.size[1]) // self.step[1] + 1
+
+        # Создаем выходной массив
+        res = [[0] * output_cols for _ in range(output_rows)]
+
+        for i in range(output_rows):
+            for j in range(output_cols):
+                window = [matrix[i * self.step[0] + di][j * self.step[0]+ dj]
+                            for di in range(self.size[0]) for dj in range(self.size[0])]
+                res[i][j] = max(window)
+
         return res
+
 
 
 mp = MaxPooling(step=(2, 2), size=(2,2))
