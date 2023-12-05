@@ -20,7 +20,7 @@ class Track:
         return tuple(self.tr)
     
     def __len__(self):
-        return int(sum([hypot(x[0],x[1]) for x in self.tr]))
+        return int(sum([hypot(x[0],x[1]) for x.coords in self.tr]))
     
     @total_ordering
     def __eq__(self, __value: object) -> bool:
@@ -29,5 +29,6 @@ class Track:
 track1, track2 = Track(), Track(0, 1)
 track1.add_track(TrackLine(2, 4, 100))
 track1.add_track(TrackLine(5, -4, 100))
+print(track1.get_tracks())
 print(len(track1))
 
