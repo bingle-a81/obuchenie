@@ -1,51 +1,57 @@
 from functools import total_ordering
-from math import hypot
-class TrackLine:
-    def __init__(self,to_x,to_y,max_speed,):
-        self.to_x = to_x
-        self.to_y = to_y
-        self.coords=(self.to_x,self.to_y)
-        self.max_speed = max_speed
 
+stich = ["Я к вам пишу – чего же боле?",
+        "Что я могу еще сказать?",
+        "Теперь, я знаю, в вашей воле",
+        "Меня презреньем наказать.",
+        "Но вы, к моей несчастной доле",
+        "Хоть каплю жалости храня,",
+        "Вы не оставите меня."]
 
 @total_ordering
-class Track:
-    def __init__(self,start_x=0,start_y=0,):
-        self.tr=[TrackLine(start_x,start_y,0)]
-
-    def add_track(self, tr:TrackLine):
-        self.tr.append(tr)
-
-    def get_tracks(self):
-        print (self.tr)
-        return tuple(self.tr)
-    
-    def __len__(self):     
-        res=(sum(self.__sl(self.tr[i-1].coords[0],self.tr[i-1].coords[1],self.tr[i].coords[0],self.tr[i].coords[1]) for i in range(1,len(self.tr))))
-        return int(res)
-    
-    def __sl(self,x1,y1,x2,y2):
-        return ((x1-x2)**2+(y1-y2)**2)**0.5
-    
+class StringText :
+    def __init__(self,lst_words:list) -> None:
+        self.lst_words=lst_words
 
     def __eq__(self, __value) -> bool:
-        if not isinstance(__value,TrackLine):
-            AssertionError('')
-        return len(self)==len(__value)
+        return len(self.lst_words)==len(__value.lst_words)
+    
+    def __gt__(self, __value) -> bool:
+        return len(self.lst_words)>len(__value.lst_words)
+    
+    def __str__(self) -> str:
+        return ' '.join(x for x in self.lst_words)
+lst=[]
+for row in stich:
+    lst=[(x) if x.isalpha() else False for x in row.split() ]
 
-    def __gt__ (self, __value) -> bool:
-        if not isinstance(__value,TrackLine):
-            AssertionError('')    
-            print(len(self))    
-        return len(self)>len(__value)
+print(lst)
 
-        
-track1, track2 = Track(), Track(0, 1)
-track1.add_track(TrackLine(2, 4, 100))
-track1.add_track(TrackLine(5, -4, 100))
-track2.add_track(TrackLine(3, 2, 90))
-track2.add_track(TrackLine(10, 8, 90))
-print(len(track1))
-print(len(track2))
-res_eq = track1 < track2
-print(res_eq)
+
+quit(-1)
+lst_text=[StringText(x.strip('–?!,.; ').split()) for x in stich]
+print(lst_text)
+lst_text_sorted=sorted(lst_text,reverse=True)
+lst_text_sorted=[str(x) for x in lst_text_sorted]
+print(lst_text_sorted)
+
+assert all([[True if i in _ else False for i in "–?!,.;"] for _ in stich]), \
+    "в stich есть знаки которые нужно удалить - (–?!,.;)"
+assert len(lst_text) == 7 and all(
+    True if isinstance(_, StringText) else False for _ in lst_text), "ошибка в lst_text"
+
+assert lst_text_sorted == ['Я к вам пишу чего же боле',
+                           'Теперь я знаю в вашей воле',
+                           'Но вы к моей несчастной доле',
+                           'Что я могу еще сказать',
+                           'Хоть каплю жалости храня',
+                           'Вы не оставите меня',
+                           'Меня презреньем наказать'], "неверно отсортирован список lst_text_sorted"
+
+assert lst_text[0] > lst_text[4] and lst_text[4] > lst_text[1], "метод > работает неверно"
+assert lst_text[1] < lst_text[4], "метод < работает неверно"
+
+assert lst_text[2] >= lst_text[4], "метод >= работает неверно"
+assert lst_text[2] <= lst_text[4], "метод >= работает неверно"
+
+print("Правильный ответ.")
