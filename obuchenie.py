@@ -22,7 +22,7 @@ class StringText :
     def __str__(self) -> str:
         return ' '.join(x for x in self.lst_words)
 
-lst_text=[StringText(list(filter(lambda y:y.strip('–?!,.;', (x.split() for x in stich))) ))]
+lst_text=[StringText(list(filter(lambda y:y.strip('–?!,.;', (x.split() for x in stich))) ))] # type: ignore
 print(lst_text)
 lst_text_sorted=sorted(lst_text,reverse=True)
 lst_text_sorted=[str(x) for x in lst_text_sorted]
