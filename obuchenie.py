@@ -21,15 +21,8 @@ class StringText :
     
     def __str__(self) -> str:
         return ' '.join(x for x in self.lst_words)
-lst=[]
-for row in stich:
-    lst=[(x) if x.isalpha() else False for x in row.split() ]
 
-print(lst)
-
-
-quit(-1)
-lst_text=[StringText(x.strip('–?!,.; ').split()) for x in stich]
+lst_text=[StringText(list(filter(lambda y:y.strip('–?!,.;', (x.split() for x in stich))) ))]
 print(lst_text)
 lst_text_sorted=sorted(lst_text,reverse=True)
 lst_text_sorted=[str(x) for x in lst_text_sorted]
