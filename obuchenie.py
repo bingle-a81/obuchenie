@@ -1,5 +1,5 @@
-import numpy as np
+i=4
+a=[[x for x in range(1,i+1)] for x in range(1,i+1)] 
 
-np.random.seed(32)
-a=np.random.rand(10)
-print(a)
+for x in a:
+    print(x)
