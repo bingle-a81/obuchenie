@@ -1,163 +1,45 @@
-from functools import total_ordering
-
-class CentralBank:
-    def __new__(cls) :
-        return None
+class Thing:
+    def __init__(self,name,mass,):
+        self.name = name
+        self.mass = mass
+        
+    def __eq__(self, name:str) -> bool:
+        return self.name==name
     
-    rates={}
-
-    @classmethod
-    def register(cls, money):
-        money.cb=cls
+    # def __ne__(self, name:str) -> bool:
+    #     return self.name!=name
 
 
-@total_ordering
-class MoneyR:
-    def __init__(self,volume=0) -> None:
-        self.cb=None
-        if volume:
-            self.volume=volume
-        else:
-            self.volume=0
 
-    @property
-    def cb(self):
-        return self.__cb
-    @cb.setter
-    def cb(self, __value):
-        self.__cb = __value
+class Box:
+    def __init__(self) -> None:
+        self.ls=[]
 
-    @property
-    def volume(self):
-        return self.__volume
-    @volume.setter
-    def volume(self, __value):
-        self.__volume = __value
+    def add_thing(self, obj) :
+        self.ls.append(obj)
 
+    def get_things(self) :
+        return self.ls
+    
     def __eq__(self, __value) -> bool:
-        if self.cb is None or __value.cb is None:
-            raise ValueError("Неизвестен курс валют.")
-        other=__value.volume
-        if not isinstance(__value,MoneyR):
-            other*=__value.cb.rates["rub"]
-        return abs(self.volume-other)<0.1
-    
-    def __gt__(self, __value) -> bool:
-        if self.cb is None or __value.cb is None:
-            raise ValueError("Неизвестен курс валют.")
-        other=__value.volume
-        if not isinstance(__value,MoneyR):
-            other*=__value.cb.rates["rub"]
-        return self.volume>other
+        lo=self.ls[:]
+        for x in lo:
+            for y in __value.ls:
+                if x==y:
+                    lo.remove(x)
+        return len(lo)==0
 
-    def __str__(self) -> str:
-        if self.cb is None :
-            raise ValueError("Неизвестен курс валют.")       
-        return f'{self.volume}'  
-    
-@total_ordering
-class MoneyD:
-    def __init__(self,volume=0) -> None:
-        self.cb=None
-        if volume:
-            self.volume=volume
-        else:
-            self.volume=0
 
-    @property
-    def cb(self):
-        return self.__cb
-    @cb.setter
-    def cb(self, __value):
-        self.__cb = __value
+b1 = Box()
+b2 = Box()
 
-    @property
-    def volume(self):
-        return self.__volume
-    @volume.setter
-    def volume(self, __value):
-        self.__volume = __value
+b1.add_thing(Thing('мел', 100))
+b1.add_thing(Thing('тряпка', 200))
+b1.add_thing(Thing('доска', 2000))
 
-    def __eq__(self, __value) -> bool:
-        if self.cb is None or __value.cb is None:
-            raise ValueError("Неизвестен курс валют.")        
-        vol=self.volume*self.cb.rates["rub"]
-        other=__value.volume
-        if not isinstance(__value,MoneyR):
-            other*=__value.cb.rates["rub"]
-        return abs(vol-other)<0.1
-    
-    def __gt__(self, __value) -> bool:
-        if self.cb is None or __value.cb is None:
-            raise ValueError("Неизвестен курс валют.")
-        vol=self.volume*self.cb.rates["rub"]
-        other=__value.volume
-        if not isinstance(__value,MoneyR):
-            other*=__value.cb.rates["rub"]
-        return vol>other
+b2.add_thing(Thing('тряпка', 200))
+b2.add_thing(Thing('мел', 100))
+b2.add_thing(Thing('доска', 2000))
 
-    def __str__(self) -> str:
-        if self.cb is None :
-            raise ValueError("Неизвестен курс валют.")       
-        return f'{self.volume*self.cb.rates["rub"]}'   
-
-@total_ordering
-class MoneyE:
-    def __init__(self,volume=0) -> None:
-        self.cb=None
-        if volume:
-            self.volume=volume
-        else:
-            self.volume=0
-
-    @property
-    def cb(self):
-        return self.__cb
-    @cb.setter
-    def cb(self, __value):
-        self.__cb = __value
-
-    @property
-    def volume(self):
-        return self.__volume
-    @volume.setter
-    def volume(self, __value):
-        self.__volume = __value
-
-    def __eq__(self, __value) -> bool:
-        if self.cb is None or __value.cb is None:
-            raise ValueError("Неизвестен курс валют.")        
-        vol=self.volume*self.cb.rates["rub"]
-        other=__value.volume
-        if not isinstance(__value,MoneyR):
-            other*=__value.cb.rates["rub"]
-        return abs(vol-other)<0.1
-    
-    def __gt__(self, __value) -> bool:
-        if self.cb is None or __value.cb is None:
-            raise ValueError("Неизвестен курс валют.")
-        vol=self.volume*self.cb.rates["rub"]
-        other=__value.volume
-        if not isinstance(__value,MoneyR):
-            other*=__value.cb.rates["rub"]
-        return vol>other
-
-    def __str__(self) -> str:
-        if self.cb is None :
-            raise ValueError("Неизвестен курс валют.")       
-        return f'{self.volume*self.cb.rates["rub"]}'   
-    
-CentralBank.rates = {'rub': 72.5, 'dollar': 1.0, 'euro': 1.15}
-
-CentralBank.rates = {'rub': 72.5, 'dollar': 1.0, 'euro': 1.15}
-
-r = MoneyR(45000)
-d = MoneyD(500)
-
-CentralBank.register(r)
-CentralBank.register(d)
-
-if r > d:
-    print("неплохо")
-else:
-    print("нужно поднажать")
+res = b1 == b2 # True
+print(res)
