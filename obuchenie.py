@@ -25,9 +25,17 @@ class Box:
         return self.ls
     
     def __eq__(self, __value) -> bool:
-        if isinstance(__value, Box):
-            return all([True if x in __value.ls else False for x in self.ls])
+        lo=self.ls[:]
+        lo1=__value.ls[:]
+        for i,x in enumerate(self.ls):
+            print(x.name)
+            for y in lo1:
+                if y==x:
+                    lo1.remove(y)
+                else
 
+                    
+        return len(lo1)==0
 
 b1 = Box()
 b2 = Box()
@@ -39,8 +47,8 @@ b1.add_thing(Thing('доска', 2000))
 
 b2.add_thing(Thing('тряпка', 200))
 b2.add_thing(Thing('Мел', 100))
-b2.add_thing(Thing('доска', 2000))
+# b2.add_thing(Thing('доска', 2000))
 b2.add_thing(Thing('доска', 2000))
 
-res = b1 != b2 # True
+res = b1 == b2 # True
 print(res)
