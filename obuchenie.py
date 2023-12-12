@@ -1,29 +1,28 @@
-class Record:
-    pk=0
 
-    def __init__(self,fio, descr, old,) -> None:
-        __class__.pk+=1
-        self.pk=__class__.pk
-        self.fio=fio
-        self.descr=descr
-        self.old=int(old)
+class Dimensions:
+    def __init__(self,a,b,c,):
+        self.a = a
+        self.b = b
+        self.c = c
+    
+    def __getattribute__(self, __name: str) :
+        return  object.__getattribute__(self,__name)
+    
+    def __setattr__(self, __name: str, __value) :
+        if __name in ('a','b','c') and __value<=0:
+            raise ValueError("габаритные размеры должны быть положительными числами")
+        object.__setattr__(self,__name,__value)
 
     def __hash__(self) -> int:
-        return hash((self.fio,self.old))
-
-    def __eq__(self, __o: object) -> bool:
-        return hash(self)==hash(__o)
-
-
-class DataBase :
-
-    def __init__(self,path) -> None:
-        self.path=path
-        self.dict_db ={}
-
-    def write(self, record):
-        self.dict_db.setdefault(record,[]).append(hash(record))
+        return hash((self.a,self.b,self.c))
+    
+    def __repr__(self) -> str:
+        return f'{hash(self)}'
 
 
-    def read(self, pk):
-        pass
+a=input()
+
+lst_dims=[Dimensions(*list(map(lambda x:float(x.strip()),y.split()))) for y in a.split(';')]
+
+lst_dims.sort(key=hash)
+print(lst_dims)
