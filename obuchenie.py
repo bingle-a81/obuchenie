@@ -39,11 +39,11 @@ class Cell:
 
 
 class GamePole:
-    isis=None
+    __isis=None
     def __new__(cls,*args,**kwargs) :
-        if cls.isis==None:
-            cls.isis=super().__new__(cls)
-        return cls.isis
+        if cls.__isis is None:
+            cls.__isis=super().__new__(cls)
+        return cls.__isis
 
     def __init__(self,N, M, total_mines) -> None:
         self.N=N
@@ -54,13 +54,17 @@ class GamePole:
 
     @property
     def pole(self):
-        return self.__pole_cells
+        return self.__pole
+    @pole.setter
+    def pole(self,val):
+        self.__pole=self.__pole_cells
+
 
     def init_pole(self):
         self.temp_pole=[[0 for i in range(self.M)] for j in range(self.N)]
         self.add_mines()
-        for i in range(self.M):
-            for j in range(self.N):
+        for i in range(self.N):
+            for j in range(self.M):
                     k=self.sum_around_mines(i,j)
                     if self.temp_pole[i][j]==1:
                         self.pole[i][j]=Cell(number=0, is_mine=True)
@@ -69,13 +73,13 @@ class GamePole:
 
     def sum_around_mines(self,i,j):
         a=((-1,-1),(-1,0),(-1,1),(0,-1),(0,1),(1,-1),(1,0),(1,1))
-        b=sum([self.temp_pole[i+x[0]][j+x[1]] for x in a if 0<=i+x[0]<self.M and 0<=j+x[1]<self.N])
+        b=sum([self.temp_pole[i+x[0]][j+x[1]] for x in a if 0<=i+x[0]<self.N and 0<=j+x[1]<self.M])
         return b                        
 
     def add_mines(self):
         k=0
         while k<self.total_mines:
-            a,b=random.randint(0,self.M-1),random.randint(0,self.N-1)
+            a,b=random.randint(0,self.N-1),random.randint(0,self.M-1)
             if self.temp_pole[a][b]==0:
                 self.temp_pole[a][b]=1
                 k+=1
@@ -92,20 +96,20 @@ class GamePole:
 
     def show_pole(self):
         for i in range(self.N):
-            for j in range(self.N):
-                if self.pole[i][j].fl_open==False:
+            for j in range(self.M):
+                if self.pole[i][j].is_open==False:
                     print('#',end=' ')
                 else:
-                    if self.pole[i][j].mine:
+                    if self.pole[i][j].is_mine:
                         print('*',end=' ')
                     else:
-                        print(self.pole[i][j].around_mines,end=' ')
+                        print(self.pole[i][j].number,end=' ')
             print('')
 
 
 
 
-pole = GamePole(10, 20, 10)  # создается поле размерами 10x20 с общим числом мин 10
+pole = GamePole(4, 8, 3)  # создается поле размерами 10x20 с общим числом мин 10
 pole.init_pole()
 if pole.pole[0][1]:
     pole.open_cell(0, 1)
