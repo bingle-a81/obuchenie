@@ -58,6 +58,7 @@ class GamePole:
     @pole.setter
     def pole(self,val):
         self.__pole=self.__pole_cells
+        # TODO property  проверка
 
 
     def init_pole(self):
