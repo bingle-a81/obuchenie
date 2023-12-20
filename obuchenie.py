@@ -1,38 +1,32 @@
-class  TriangleListIterator:
-    i=0
-    def __init__(self,lst) -> None:
+class  IterColumn:
+
+    def __init__(self,lst,column) -> None:
         self.lst=lst
+        self.column=column
+        self.i=0
+        self.temp=list(map(list,zip(*self.lst)))
 
 
     def __iter__(self):
-        return self
+        try:
+            for x in self.temp[self.column]:
+                yield(x )
+                
+        except StopIteration:
+            print('st')
 
-    def __next__(self):
-        while self.i<len(self.lst):
-            j=0
-            while j<=self.i:   
-                # print (self.lst[self.i][self.i] )  
-                res=self.lst[self.i][j]     
-                j+=1     
-                yield(res )
-            self.i+=1
-            return 
-        else:
-            raise StopIteration
+    
+
 
 
 lst = [['x00', 'x01', 'x02'],
-       ['x10', 'x11'],
-       ['x20', 'x21', 'x22', 'x23', 'x24'],
-       ['x30', 'x31', 'x32', 'x33']]
+       ['x10', 'x11', 'x12'],
+       ['x20', 'x21', 'x22'],
+       ['x30', 'x31', 'x32']]
 
-it = TriangleListIterator(lst)
-# print(next(it))
-# print(next(it))
-# print(next(it))
-
-for x in it:  # последовательный перебор всех элементов списка: x00, x10, x11, x20, ...
+it = IterColumn(lst, 1)
+for x in it:  # последовательный перебор всех элементов столбца списка: x12, x22, ..., xM2
     print(x)
 
-# it_iter = iter(it)
-# x = next(it_iter)
+it_iter = iter(it)
+x = next(it_iter)
