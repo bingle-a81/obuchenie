@@ -61,9 +61,22 @@ class Matrix:
         self.ls[item[0]][item[1]]=val
 
     def __add__(self,other):
+        temp=self.ls.copy()
         if type(other)==int:
-            self.ls=[x+other]
-            type(x) not in (int,float) for row in ls for x in row
+            for i in range(len(self.ls)):
+                for j in range(len(self.ls)):
+                    temp[i][j]=self.ls[i][j]+other
+        else:
+            # self._check_list(other)
+
+            if len(self.ls)!=len(other.ls) or len(self.ls[0])!=len(other.ls[0]):
+                raise ValueError('операции возможны только с матрицами равных размеров')
+            for i in range(len(self.ls)):
+                for j in range(len(self.ls)):
+                    temp[i][j]=temp[i][j]+other.ls[i][j]  
+                    print(temp[i][j],self.ls[i][j])         
+        return Matrix
+
 
 
 mt = Matrix([[1, 2], [3, 4]])
@@ -136,6 +149,7 @@ else:
 m1 = Matrix([[1, 2], [3, 4]])
 m2 = Matrix([[1, 1], [1, 1]])
 matrix = m1 + m2
+print(matrix.ls)
 assert isinstance(matrix, Matrix), "операция сложения матриц должна возвращать экземпляр класса Matrix"
 assert matrix[1, 1] == 5, "неверно отработала операция сложения матриц"
 assert m1[1, 1] == 4 and m1[0, 1] == 2 and m2[1, 1] == 1 \
