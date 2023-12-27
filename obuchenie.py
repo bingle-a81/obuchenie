@@ -1,6 +1,10 @@
-class Validator:
-    def _is_valid(self, data):
-        return True
+class Layer:
+    def __init__(self, next_layer, name="Layer") -> None:
+        self.next_layer = next_layer
+        self.name = name
 
-    def __call__(self, *args: Any, **kwds: Any) -> Any:
-        pass
+
+class Input:
+    def __init__(self, inputs, name) -> None:
+        self.inputs = inputs
+        self.name = name
