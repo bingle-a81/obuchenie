@@ -1,41 +1,48 @@
-from collections.abc import Iterable
+class Layer:
+    def __init__(self, name="Layer") -> None:
+        self.name = name
+        self.next_layer = None
+
+    def __call__(self, obj):
+        self.next_layer = obj
+        return obj
 
 
-class FRangeIterator:
-    def __init__(self, start, stop, step):
-        self.current = start - step
-        self.stop = stop
-        self.step = step
+class Input(Layer):
+    def __init__(self, inputs, name="Input") -> None:
+        super().__init__(name)
+        self.inputs = inputs
+
+
+class Dense(Layer):
+    def __init__(self, inputs, outputs, activation, name="Dense") -> None:
+        super().__init__(name)
+        self.inputs = inputs
+        self.outputs = outputs
+        self.activation = activation
+
+
+class NetworkIterator:
+    def __init__(self, network) -> None:
+        self.network = network
 
     def __iter__(self):
-        return self
-
-    def __next__(self):
-        self.current += self.step
-        if self.current < self.stop:
-            return self.current
-        else:
-            raise StopIteration
+        n = self.network
+        while n:
+            yield n
+            n = n.next_layer
 
 
-class FRange:
-    def __init__(self, start=0.0, stop=0.0, step=1.0):
-        self.start = start
-        self.stop = stop
-        self.step = step
+nt = Input(12)
+layer = nt(Dense(nt.inputs, 1024, "relu"))
+layer = layer(Dense(layer.inputs, 2048, "relu"))
+layer = layer(Dense(layer.inputs, 10, "softmax"))
 
-    def __iter__(self):
-        return FRangeIterator(self.start, self.stop, self.step)
-
-
-fr = FRange(0, 2, 0.5)
-if isinstance(FRange, Iterable):
-    print("True")
-else:
-    print(False)
-it1 = iter(fr)
-it2 = iter(fr)
-print(next(it1))  # 0.0
-print(next(it1))  # 0.5
-print(next(it2))  # 0.0
-print(next(it2))  # 0.5
+n = 0
+for x in NetworkIterator(nt):
+    assert isinstance(
+        x, Layer
+    ), "итератор должен возвращать объекты слоев с базовым классом Layer"
+    n += 1
+print(n)
+assert n == 4, "итератор перебрал неверное число слоев"
