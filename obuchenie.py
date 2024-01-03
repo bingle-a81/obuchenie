@@ -1,38 +1,43 @@
-class Router:
-    app = {}
+# здесь объявляйте функцию-декоратор
+def integer_params_decorated(func):
+    def wrap(self, *args, **kwargs):
+        for x in args:
+            if type(x) != int:
+                raise TypeError("аргументы должны быть целыми числами")
+        d = kwargs.values()
+        for x in d:
+            if type(x) != int:
+                raise TypeError("аргументы должны быть целыми числами")
+        return func(self, *args, **kwargs)
 
-    @classmethod
-    def get(cls, path):
-        return cls.app.get(path)
-
-    @classmethod
-    def add_callback(cls, path, func):
-        cls.app[path] = func
-
-
-class Callback:
-    def __init__(self, path, router_cls):
-        self.path = path
-        self.router_cls = router_cls
-
-    def __call__(self, func):
-        self.router_cls.add_callback(self.path, func)
-
-        def wrapper(*args, **kwargs):
-            return func(*args, **kwargs)
-
-        return wrapper
+    return wrap
 
 
-@Callback("/about", Router)
-def about():
-    return "<h1>About</h1>"
+def integer_params(cls):
+    methods = {k: v for k, v in cls.__dict__.items() if callable(v)}
+    for k, v in methods.items():
+        setattr(cls, k, integer_params_decorated(v))
+
+    return cls
 
 
-route = Router.get("/about")
-ret = route()
-print(ret)
-assert ret == "<h1>About</h1>", "декорированная функция вернула неверные данные"
+@integer_params
+class Vector:
+    def __init__(self, *args):
+        self.__coords = list(args)
 
-route = Router.get("/")
-assert route is None, "Класс Router, при вызове метода get, вернул неверные данные"
+    def __getitem__(self, item):
+        return self.__coords[item]
+
+    def __setitem__(self, key, value):
+        self.__coords[key] = value
+
+    def set_coords(self, *coords, reverse=False):
+        c = list(coords)
+        self.__coords = c if not reverse else c[::-1]
+
+
+vector = Vector(1, 2)
+vector.set_coords(1, 2, reverse=True)
+print(vector[1])
+vector[1] = 20.4  # TypeError
