@@ -1,78 +1,37 @@
-<<<<<<< HEAD
-class VideoItem:
-    def __init__(self, title, descr, path) -> None:
-        self.title = title
-        self.descr = descr
-        self.path = path
-        self.rating = VideoRating()
+CURRENT_OS = "linux"  # 'windows', 'linux'
 
 
-class VideoRating:
-    def __init__(self, rating=0) -> None:
-        self.rating = rating
-
-    @property
-    def rating(self):
-        return self.__rating
-
-    @rating.setter
-    def rating(self, val):
-        if not (-1 < val < 6):
-            raise ValueError("неверное присваиваемое значение")
-        self.__rating = val
+class WindowsFileDialog:
+    def __init__(self, title, path, exts):
+        self.__title = title  # заголовок диалогового окна
+        self.__path = path  # начальный каталог с файлами
+        self.__exts = exts  # кортеж из отображаемых расширений файлов
 
 
-v = VideoItem(
-    "Курс по Python ООП", "Подробный курс по Python ООР", "D:/videos/python_oop.mp4"
-)
-print(v.rating.rating)  # 0
-v.rating.rating = 5
-print(v.rating.rating)  # 5
-title = v.title
-descr = v.descr
-v.rating.rating = 6  # ValueError
-=======
-# здесь объявляйте функцию-декоратор
-def integer_params_decorated(func):
-    def wrap(self, *args, **kwargs):
-        for x in args:
-            if type(x) != int:
-                raise TypeError("аргументы должны быть целыми числами")
-        d = kwargs.values()
-        for x in d:
-            if type(x) != int:
-                raise TypeError("аргументы должны быть целыми числами")
-        return func(self, *args, **kwargs)
-
-    return wrap
+class LinuxFileDialog:
+    def __init__(self, title, path, exts):
+        self.__title = title  # заголовок диалогового окна
+        self.__path = path  # начальный каталог с файлами
+        self.__exts = exts  # кортеж из отображаемых расширений файлов
 
 
-def integer_params(cls):
-    methods = {k: v for k, v in cls.__dict__.items() if callable(v)}
-    for k, v in methods.items():
-        setattr(cls, k, integer_params_decorated(v))
+class FileDialogFactory:
+    def __new__(cls, *args):
+        if len(args) == 3:
+            if CURRENT_OS == "windows":
+                return cls.create_windows_filedialog(*args)
+            else:
+                return cls.create_linux_filedialog(*args)
+        return None
 
-    return cls
+    @staticmethod
+    def create_windows_filedialog(title, path, exts):
+        return WindowsFileDialog(title, path, exts)
 
-
-@integer_params
-class Vector:
-    def __init__(self, *args):
-        self.__coords = list(args)
-
-    def __getitem__(self, item):
-        return self.__coords[item]
-
-    def __setitem__(self, key, value):
-        self.__coords[key] = value
-
-    def set_coords(self, *coords, reverse=False):
-        c = list(coords)
-        self.__coords = c if not reverse else c[::-1]
+    @staticmethod
+    def create_linux_filedialog(title, path, exts):
+        return LinuxFileDialog(title, path, exts)
 
 
-vector = Vector(1, 2)
-vector.set_coords(1, 2, reverse=True)
-print(vector[1])
-vector[1] = 20.4  # TypeError
->>>>>>> 6132451d5005603f02582403d77d0725f10b1ebf
+dlg = FileDialogFactory("Изображения", "d:/images/", ("jpg", "gif", "bmp", "png"))
+print(type(dlg))
