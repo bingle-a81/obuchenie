@@ -1,37 +1,24 @@
-CURRENT_OS = "linux"  # 'windows', 'linux'
+class Validator:
+    def _is_valid(self, data):
+        raise NotImplementedError("в классе не переопределен метод _is_valid")
 
 
-class WindowsFileDialog:
-    def __init__(self, title, path, exts):
-        self.__title = title  # заголовок диалогового окна
-        self.__path = path  # начальный каталог с файлами
-        self.__exts = exts  # кортеж из отображаемых расширений файлов
+class FloatValidator(Validator):
+    def __init__(self, min_value, max_value) -> None:
+        self.min_value = min_value
+        self.max_value = max_value
+
+    def _is_valid(self, data):
+        if type(data) == float and (self.min_value <= data <= self.max_value):
+            return True
+        return False
+
+    def __call__(self, data) -> bool:
+        return self._is_valid(data=data)
 
 
-class LinuxFileDialog:
-    def __init__(self, title, path, exts):
-        self.__title = title  # заголовок диалогового окна
-        self.__path = path  # начальный каталог с файлами
-        self.__exts = exts  # кортеж из отображаемых расширений файлов
-
-
-class FileDialogFactory:
-    def __new__(cls, *args):
-        if len(args) == 3:
-            if CURRENT_OS == "windows":
-                return cls.create_windows_filedialog(*args)
-            else:
-                return cls.create_linux_filedialog(*args)
-        return None
-
-    @staticmethod
-    def create_windows_filedialog(title, path, exts):
-        return WindowsFileDialog(title, path, exts)
-
-    @staticmethod
-    def create_linux_filedialog(title, path, exts):
-        return LinuxFileDialog(title, path, exts)
-
-
-dlg = FileDialogFactory("Изображения", "d:/images/", ("jpg", "gif", "bmp", "png"))
-print(type(dlg))
+float_validator = FloatValidator(0, 10.5)
+res_1 = float_validator(1)  # False (целое число, а не вещественное)
+res_2 = float_validator(1.0)  # True
+res_3 = float_validator(-1.0)  # False (выход за диапазон [0; 10.5])
+print(res_1, res_2, res_3)
