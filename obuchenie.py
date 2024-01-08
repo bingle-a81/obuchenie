@@ -1,24 +1,29 @@
-class Validator:
-    def _is_valid(self, data):
-        raise NotImplementedError("в классе не переопределен метод _is_valid")
+from abc import ABC, abstractmethod
 
 
-class FloatValidator(Validator):
-    def __init__(self, min_value, max_value) -> None:
-        self.min_value = min_value
-        self.max_value = max_value
+class Model:
+    @abstractmethod
+    def get_pk(self):
+        pass
 
-    def _is_valid(self, data):
-        if type(data) == float and (self.min_value <= data <= self.max_value):
-            return True
-        return False
-
-    def __call__(self, data) -> bool:
-        return self._is_valid(data=data)
+    def get_info(self):
+        return "Базовый класс Model"
 
 
-float_validator = FloatValidator(0, 10.5)
-res_1 = float_validator(1)  # False (целое число, а не вещественное)
-res_2 = float_validator(1.0)  # True
-res_3 = float_validator(-1.0)  # False (выход за диапазон [0; 10.5])
-print(res_1, res_2, res_3)
+class ModelForm(Model):
+    _id = 0
+
+    def __init__(self, login, password) -> None:
+        __class__._id += 1
+        self._id = __class__._id
+        self.login = login
+        self.password = password
+
+    def get_pk(self):
+        return self._id
+
+
+form = ModelForm("Логин", "Пароль")
+form = ModelForm("Логин", "Пароль")
+form = ModelForm("Логин", "Пароль")
+print(form.get_pk())
