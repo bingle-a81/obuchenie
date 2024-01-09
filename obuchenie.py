@@ -1,29 +1,28 @@
-from abc import ABC, abstractmethod
+class Food:
+    def __init__(self, name, weight, calories) -> None:
+        self._name = name
+        self._weight = weight
+        self._calories = calories
 
 
-class Model:
-    @abstractmethod
-    def get_pk(self):
-        pass
-
-    def get_info(self):
-        return "Базовый класс Model"
+class BreadFood(Food):
+    def __init__(self, name, weight, calories, white) -> None:
+        super().__init__(name, weight, calories)
+        self._white = white
 
 
-class ModelForm(Model):
-    _id = 0
-
-    def __init__(self, login, password) -> None:
-        __class__._id += 1
-        self._id = __class__._id
-        self.login = login
-        self.password = password
-
-    def get_pk(self):
-        return self._id
+class SoupFood(Food):
+    def __init__(self, name, weight, calories, dietary) -> None:
+        super().__init__(name, weight, calories)
+        self._dietary = dietary
 
 
-form = ModelForm("Логин", "Пароль")
-form = ModelForm("Логин", "Пароль")
-form = ModelForm("Логин", "Пароль")
-print(form.get_pk())
+class FishFood(Food):
+    def __init__(self, name, weight, calories, fish) -> None:
+        super().__init__(name, weight, calories)
+        self._fish = fish
+
+
+bf = BreadFood("Бородинский хлеб", 34.5, 512, False)
+sf = SoupFood("Черепаший суп", 520, 890.5, False)
+ff = FishFood("Консерва рыбная", 340, 1200, "семга")
