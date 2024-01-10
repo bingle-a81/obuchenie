@@ -1,28 +1,9 @@
-class Food:
-    def __init__(self, name, weight, calories) -> None:
-        self._name = name
-        self._weight = weight
-        self._calories = calories
+from itertools import combinations
 
-
-class BreadFood(Food):
-    def __init__(self, name, weight, calories, white) -> None:
-        super().__init__(name, weight, calories)
-        self._white = white
-
-
-class SoupFood(Food):
-    def __init__(self, name, weight, calories, dietary) -> None:
-        super().__init__(name, weight, calories)
-        self._dietary = dietary
-
-
-class FishFood(Food):
-    def __init__(self, name, weight, calories, fish) -> None:
-        super().__init__(name, weight, calories)
-        self._fish = fish
-
-
-bf = BreadFood("Бородинский хлеб", 34.5, 512, False)
-sf = SoupFood("Черепаший суп", 520, 890.5, False)
-ff = FishFood("Консерва рыбная", 340, 1200, "семга")
+answers = [
+    "2-й вариант предпочтительнее",
+    "2-й вариант вполне допустим",
+    "1-й предпочтительнее",
+    "1-й вариант вполне допустим",
+]
+print(*combinations(sorted(answers), 2), sep="\n")
