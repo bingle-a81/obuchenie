@@ -1,37 +1,29 @@
-CURRENT_OS = "linux"  # 'windows', 'linux'
+from abc import ABC, abstractmethod
 
 
-class WindowsFileDialog:
-    def __init__(self, title, path, exts):
-        self.__title = title  # заголовок диалогового окна
-        self.__path = path  # начальный каталог с файлами
-        self.__exts = exts  # кортеж из отображаемых расширений файлов
+class Model(ABC):
+    @abstractmethod
+    def get_pk(self):
+        pass
+
+    def get_info(self):
+        return "Базовый класс Model"
 
 
-class LinuxFileDialog:
-    def __init__(self, title, path, exts):
-        self.__title = title  # заголовок диалогового окна
-        self.__path = path  # начальный каталог с файлами
-        self.__exts = exts  # кортеж из отображаемых расширений файлов
+class ModelForm(Model):
+    _id = 0
+
+    def __init__(self, login, password) -> None:
+        __class__._id += 1
+        self._id = __class__._id
+        self.login = login
+        self.password = password
+
+    def get_pk(self):
+        return self._id
 
 
-class FileDialogFactory:
-    def __new__(cls, *args):
-        if len(args) == 3:
-            if CURRENT_OS == "windows":
-                return cls.create_windows_filedialog(*args)
-            else:
-                return cls.create_linux_filedialog(*args)
-        return None
-
-    @staticmethod
-    def create_windows_filedialog(title, path, exts):
-        return WindowsFileDialog(title, path, exts)
-
-    @staticmethod
-    def create_linux_filedialog(title, path, exts):
-        return LinuxFileDialog(title, path, exts)
-
-
-dlg = FileDialogFactory("Изображения", "d:/images/", ("jpg", "gif", "bmp", "png"))
-print(type(dlg))
+form = ModelForm("Логин", "Пароль")
+form = ModelForm("Логин", "Пароль")
+form = ModelForm("Логин", "Пароль")
+print(form.get_pk())
