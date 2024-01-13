@@ -1,42 +1,41 @@
-class Star:
-    __slots__ = ("_name", "_massa", "_temp")
+class Note:
+    NOTE_LIST = ("до", "ре", "ми", "фа", "соль", "ля", "си")
 
-    def __init__(self, name, massa, temp) -> None:
+    def __init__(self, name, ton) -> None:
         self._name = name
-        self._massa = massa
-        self._temp = temp
+        self._ton = ton
+
+    @property
+    def name(self):
+        return self.__name
+
+    @name.setter
+    def name(self, __value):
+        if __value not in self.NOTE_LIST:
+            raise ValueError("недопустимое значение аргумента")
+        self.__name = __value
+
+    @property
+    def ton(self):
+        return self.__ton
+
+    @ton.setter
+    def ton(self, __value):
+        if type(__value) != int and __value not in range(-1, 1):
+            raise ValueError("недопустимое значение аргумента")
+        self.__ton = __value
 
 
-class SubStar(Star):
-    __slots__ = ("_type_star", "_radius")
+class Notes:
+    __slots__ = ("_do", "_re", "_mi", "_fa", "_solt", "_la", "_si")
+    __isictance = None
 
-    def __init__(self, name, massa, temp, type_star, radius) -> None:
-        super().__init__(name, massa, temp)
-        self._type_star = type_star
-        self._radius = radius
+    def __new__(cls, *args, **kwargs):
+        if cls.__isictance is None:
+            cls.__isictance = super().__new__(cls, *args, **kwargs)
+        return cls.__isictance
 
-
-class WhiteDwarf(SubStar):
-    __slots__ = ()
-
-
-class YellowDwarf(SubStar):
-    __slots__ = ()
-
-
-class RedGiant(SubStar):
-    __slots__ = ()
-
-
-class Pulsar(SubStar):
-    __slots__ = ()
-
-
-stars = [
-    RedGiant("Альдебаран", 5, 3600, "красный гигант", 45),
-    WhiteDwarf("Сириус А", 2.1, 9250, "белый карлик", 2),
-    WhiteDwarf("Сириус B", 1, 8200, "белый карлик", 0.01),
-    YellowDwarf("Солнце", 1, 6000, "желтый карлик", 1),
-]
-white_dwarfs = list(filter(lambda x: isinstance(x, WhiteDwarf), stars))
-print(white_dwarfs)
+    def __getitem__(self, item):
+        if not 0 <= item < 6:
+            raise IndexError("недопустимый индекс")
+        return getattr(self, self.__slots__[item])
