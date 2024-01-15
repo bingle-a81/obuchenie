@@ -1,3 +1,6 @@
+from collections import defaultdict
+
+
 class Vertex:
     def __init__(self) -> None:
         self._links = []
@@ -63,7 +66,60 @@ class LinkedGraph:
             link.v1.links.append(link.v2)
 
     def find_path(self, start_v, stop_v):
-        pass
+        prev = self.dijkstra(start_v, stop_v)
+        # path = [stop_v]
+        # while prev[path[0]] is not None:
+        #     path.append(prev[path[0]])
+        #     path[0] = prev[path[0]]
+        # path.reverse()
+        return path
+
+    def dijkstra(self, start_v, stop_v):
+        number_of_stations = len(self._links)
+        # Инициализируем граф
+        graph = defaultdict(list)
+        # Заполняем граф: вершина -> (стоимость, вершина куда можем прийти)
+        for x in self._links:
+            a, b, cost = x.v1, x.v2, x.dist
+            graph[a] += [(cost, b)]
+        # Инициализируем список вершин для посещения
+        nodes_to_visit = []
+        # Добавляем нашу исходную с расстоянием равным нулю
+        nodes_to_visit.append((0, start_v))
+        # Инициализируем список уникальных значений для хранения вершин которые уже посетили
+        visited = set()
+        # Заполняем расстояния до всех остальных вершие
+        min_dist = {
+            self._links[i].v1: float("inf") for i in range(1, number_of_stations)
+        }
+        # Заполняем расстояние до текущей вершины
+        min_dist[start_v] = 0
+        # Проходимся по всем вершинам которые нужно посетить
+        # Проходимся до тех пор, пока такие вершины есть
+        while len(nodes_to_visit):
+            # Берем самую близкую вершину к нам
+            # cost - стоимость попадания, node - название вершины
+            cost, node = min(nodes_to_visit)
+            # Удаляем эту вершину из списка вершин для посещения
+            nodes_to_visit.remove((cost, node))
+            # Проверяем что мы в нее еще не заходили (если вдруг мы сначала добавили (9,7), а потом (6,7)
+            if node in visited:
+                continue
+            # Добавляем в список посещенных
+            visited.add(node)
+            # Проходимся по всем соединенным вершинам
+            # n_cost - стоимость попадания из текущей вершины, n_node - прикрепленная вершина, в которую хотим попасть
+            for n_cost, n_node in graph[node]:
+                print(min_dist["Чистые пруды"])
+                # Проверяем нашли ли мы оптимальный путь
+                if cost + n_cost < min_dist[n_node] and n_node not in visited:
+                    # Если нашли то обновляем значение расстояния
+                    min_dist[n_node] = cost + n_cost
+                    # И добавляем эту вершину в список вершин для посещения
+                    nodes_to_visit.append((cost + n_cost, n_node))
+
+        # Выводим ответ
+        print(min_dist[stop_v])
 
 
 class Station(Vertex):
@@ -86,25 +142,24 @@ class LinkMetro(Link):
         return f"{self.v1.name}->{self.v2.name}"
 
 
-# map_metro = LinkedGraph()
-# v1 = Station("Сретенский бульвар")
-# v2 = Station("Тургеневская")
-# v3 = Station("Чистые пруды")
-# v4 = Station("Лубянка")
-# v5 = Station("Кузнецкий мост")
-# v6 = Station("Китай-город 1")
-# v7 = Station("Китай-город 2")
+map_metro = LinkedGraph()
+v1 = Station("Сретенский бульвар")
+v2 = Station("Тургеневская")
+v3 = Station("Чистые пруды")
+v4 = Station("Лубянка")
+v5 = Station("Кузнецкий мост")
+v6 = Station("Китай-город 1")
+v7 = Station("Китай-город 2")
 
-# l1 = LinkMetro(v1, v2, 1)
-# l2 = LinkMetro(v2, v3, 1)
-# map_metro.add_link(l1)
-# map_metro.add_link(l2)
-# map_metro.add_link(LinkMetro(v2, v1, 1))
-# map_metro.add_link(LinkMetro(v2, v3, 1))
+l1 = LinkMetro(v1, v2, 1)
+l2 = LinkMetro(v2, v3, 1)
+map_metro.add_link(l1)
+map_metro.add_link(l2)
+map_metro.add_link(LinkMetro(v2, v1, 1))
+map_metro.add_link(LinkMetro(v2, v3, 1))
 # print("...".join([str(x) for x in map_metro._links]))
-# map_metro.add_link(LinkMetro(v2, v3, 1))
-# print(map_metro._vertex)
-# print(map_metro._vertex[1].links)
+map_metro.add_link(LinkMetro(v2, v3, 1))
+map_metro.find_path(v1, v3)
 
 
 # map_metro.add_link(LinkMetro(v1, v3, 1))
@@ -116,7 +171,7 @@ class LinkMetro(Link):
 # map_metro.add_link(LinkMetro(v3, v4, 3))
 # map_metro.add_link(LinkMetro(v5, v6, 3))
 
-quit(-1)
+# quit(-1)
 map2 = LinkedGraph()
 v1 = Vertex()
 v2 = Vertex()
