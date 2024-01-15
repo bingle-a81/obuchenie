@@ -4,12 +4,11 @@ class Vertex:
 
     @property
     def links(self):
-        print(self._links)
         return self._links
 
-    @links.setter
-    def links(self, val):
-        self._links.append(val)
+    # @links.setter
+    # def links(self, val):
+    #     self._links.append(val)
 
 
 class Link:
@@ -43,7 +42,6 @@ class Link:
         self._dist = val
 
     def __eq__(self, __o) -> bool:
-        a = {self.v1, self.v2}
         return {self.v1, self.v2} == {__o.v1, __o.v2}
 
 
@@ -59,10 +57,11 @@ class LinkedGraph:
     def add_link(self, link: Link):
         if link not in self._links:
             self._links.append(link)
+            print(self._links)
         self.add_vertex(link.v1)
         self.add_vertex(link.v2)
-        link.v1.links.append(v2)
-        # link.v2.links.append(v1)
+        if link.v2 not in link.v1.links:
+            link.v1.links.append(link.v2)
 
     def find_path(self, start_v, stop_v):
         pass
@@ -84,6 +83,9 @@ class LinkMetro(Link):
     def __init__(self, v1, v2, dist=1) -> None:
         super().__init__(v1, v2, dist)
 
+    def __repr__(self) -> str:
+        return f"{v1.name}->{v2.name}"
+
 
 map_metro = LinkedGraph()
 v1 = Station("Сретенский бульвар")
@@ -95,6 +97,10 @@ v6 = Station("Китай-город 1")
 v7 = Station("Китай-город 2")
 
 map_metro.add_link(LinkMetro(v1, v2, 1))
+map_metro.add_link(LinkMetro(v2, v3, 1))
+map_metro.add_link(LinkMetro(v2, v1, 1))
+# map_metro.add_link(LinkMetro(v2, v3, 1))
+print("...".join([str(x) for x in map_metro._links]))
 # map_metro.add_link(LinkMetro(v2, v3, 1))
 # print(map_metro._vertex)
 # print(map_metro._vertex[1].links)
