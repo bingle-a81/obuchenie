@@ -21,7 +21,7 @@ class Graph(object):
             for adjacent_node, value in edges.items():
                 if graph[adjacent_node].get(node, False) == False:
                     graph[adjacent_node][node] = value
-
+        print(graph)
         return graph
 
     def get_nodes(self):

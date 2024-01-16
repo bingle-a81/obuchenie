@@ -82,6 +82,11 @@ class LinkedGraph:
 
         return [[], []]
 
+    def dijkstra_algorithm(self, start_v):
+        graph = {}
+        for node in self._vertex:
+            graph[node] = {}
+
 
 class Station(Vertex):
     def __init__(self, name) -> None:
