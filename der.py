@@ -21,7 +21,7 @@ class Graph(object):
             for adjacent_node, value in edges.items():
                 if graph[adjacent_node].get(node, False) == False:
                     graph[adjacent_node][node] = value
-        print(graph)
+        # print(graph)
         return graph
 
     def get_nodes(self):
@@ -130,6 +130,6 @@ init_graph["Rome"]["Athens"] = 2
 
 graph = Graph(nodes, init_graph)
 
-previous_nodes, shortest_path = dijkstra_algorithm(graph=graph, start_node="Reykjavik")
-
-print_result(previous_nodes, shortest_path, start_node="Reykjavik", target_node="Rome")
+previous_nodes, shortest_path = dijkstra_algorithm(graph=graph, start_node="Moscow")
+print(shortest_path)
+print_result(previous_nodes, shortest_path, start_node="Moscow", target_node="London")

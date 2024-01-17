@@ -1,4 +1,4 @@
-from collections import defaultdict
+import sys
 
 
 class Vertex:
@@ -52,6 +52,7 @@ class LinkedGraph:
     def __init__(self) -> None:
         self._links = []
         self._vertex = []
+        self.graph = {}
 
     def add_vertex(self, v: Vertex):
         if v not in self._vertex:
@@ -66,26 +67,87 @@ class LinkedGraph:
             link.v1.links.append(link.v2)
 
     def find_path(self, start_v, stop_v):
+        self.__construct_graph()
+        previous_nodes, shortest_path = self.__dijkstra_algorithm(start_v)
 
-        if start_v == stop_v:
-            return [[start_v], [(start_v, stop_v)]]
+        path = []
+        link_path = []
+        node = stop_v
 
-        neighbors = self._vertex[self._links.index(start_v)]
-        for neighbor, weight in neighbors:
-            if neighbor not in self._vertex:
-                path, connections = self.find_path(start_v, stop_v)
-                if path:
-                    return [
-                        path + [neighbor],
-                        connections + [(start_v, neighbor, weight)],
-                    ]
+        while node != start_v:
+            a = node
+            path.append(node)
+            node = previous_nodes[node]
+            b = Link(v1=node, v2=a)
+            for x in self._links:
+                if b == x:
+                    link_path.append(x)
 
-        return [[], []]
+        # Добавить начальный узел вручную
+        path.append(start_v)
+        path.reverse()
+        return path, link_path
 
-    def dijkstra_algorithm(self, start_v):
-        graph = {}
+    def __construct_graph(self):
         for node in self._vertex:
-            graph[node] = {}
+            self.graph[node] = {}
+
+        for link in self._links:
+            self.graph[link.v1][link.v2] = link.dist
+
+    def __get_outgoing_edges(self, node):
+        "Возвращает соседей узла"
+        connections = []
+        for out_node in self._vertex:
+            if self.graph[node].get(out_node, False) != False:
+                connections.append(out_node)
+        return connections
+
+    def __value(self, node1, node2):
+        "Возвращает значение ребра между двумя узлами."
+        return self.graph[node1][node2]
+
+    def __dijkstra_algorithm(self, start_v):
+        unvisited_nodes = self._vertex
+
+        # Мы будем использовать этот словарь, чтобы сэкономить на посещении каждого узла и обновлять его по мере продвижения по графику
+        shortest_path = {}
+
+        # Мы будем использовать этот dict, чтобы сохранить кратчайший известный путь к найденному узлу
+        previous_nodes = {}
+
+        # Мы будем использовать max_value для инициализации значения "бесконечности" непосещенных узлов
+        max_value = sys.maxsize
+        for node in unvisited_nodes:
+            shortest_path[node] = max_value
+        # Однако мы инициализируем значение начального узла 0
+        shortest_path[start_v] = 0
+
+        # Алгоритм выполняется до тех пор, пока мы не посетим все узлы
+        while unvisited_nodes:
+            # Приведенный ниже блок кода находит узел с наименьшей оценкой
+            current_min_node = None
+            for node in unvisited_nodes:  # Iterate over the nodes
+                if current_min_node == None:
+                    current_min_node = node
+                elif shortest_path[node] < shortest_path[current_min_node]:
+                    current_min_node = node
+
+            # Приведенный ниже блок кода извлекает соседей текущего узла и обновляет их расстояния
+            neighbors = self.__get_outgoing_edges(current_min_node)
+            for neighbor in neighbors:
+                tentative_value = shortest_path[current_min_node] + self.__value(
+                    current_min_node, neighbor
+                )
+                if tentative_value < shortest_path[neighbor]:
+                    shortest_path[neighbor] = tentative_value
+                    # We also update the best path to the current node
+                    previous_nodes[neighbor] = current_min_node
+
+            # После посещения его соседей мы отмечаем узел как "посещенный"
+            unvisited_nodes.remove(current_min_node)
+
+        return previous_nodes, shortest_path
 
 
 class Station(Vertex):
@@ -108,36 +170,6 @@ class LinkMetro(Link):
         return f"{self.v1.name}->{self.v2.name}"
 
 
-map_metro = LinkedGraph()
-v1 = Station("Сретенский бульвар")
-v2 = Station("Тургеневская")
-v3 = Station("Чистые пруды")
-v4 = Station("Лубянка")
-v5 = Station("Кузнецкий мост")
-v6 = Station("Китай-город 1")
-v7 = Station("Китай-город 2")
-
-l1 = LinkMetro(v1, v2, 1)
-l2 = LinkMetro(v2, v3, 1)
-map_metro.add_link(l1)
-map_metro.add_link(l2)
-map_metro.add_link(LinkMetro(v2, v1, 1))
-map_metro.add_link(LinkMetro(v2, v3, 1))
-# print("...".join([str(x) for x in map_metro._links]))
-map_metro.add_link(LinkMetro(v2, v3, 1))
-map_metro.find_path(v1, v3)
-
-
-# map_metro.add_link(LinkMetro(v1, v3, 1))
-
-# map_metro.add_link(LinkMetro(v4, v5, 1))
-# map_metro.add_link(LinkMetro(v6, v7, 1))
-
-# map_metro.add_link(LinkMetro(v2, v7, 5))
-# map_metro.add_link(LinkMetro(v3, v4, 3))
-# map_metro.add_link(LinkMetro(v5, v6, 3))
-
-# quit(-1)
 map2 = LinkedGraph()
 v1 = Vertex()
 v2 = Vertex()
