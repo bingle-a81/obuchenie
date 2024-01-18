@@ -1,135 +1,118 @@
-import sys
+from random import randint
+
+SIZE_GAME_POLE = 10
 
 
-class Graph(object):
-    def __init__(self, nodes, init_graph):
-        self.nodes = nodes
-        self.graph = self.construct_graph(nodes, init_graph)
+class Ship:
+    def __init__(self, length, x=None, y=None, tp=1) -> None:
+        self._x = x
+        self._y = y
+        self._tp = tp
+        self._length = length
+        self._is_move = True
+        self._cells = [1 for x in range(self._length)]
+        self._points = []
 
-    def construct_graph(self, nodes, init_graph):
-        """
-        Этот метод обеспечивает симметричность графика. Другими словами,
-         если существует путь от узла A к B со значением V, должен быть путь от узла B к узлу A со значением V.
-        """
-        graph = {}
-        for node in nodes:
-            graph[node] = {}
+    def set_start_coords(self, x, y):
+        self._x = x
+        self._y = y
 
-        graph.update(init_graph)
+    def get_start_coords(self):
+        return (self._x, self._y)
 
-        for node, edges in graph.items():
-            for adjacent_node, value in edges.items():
-                if graph[adjacent_node].get(node, False) == False:
-                    graph[adjacent_node][node] = value
-        # print(graph)
-        return graph
+    def move(self, go):
+        ...
 
-    def get_nodes(self):
-        "Возвращает узлы графа"
-        return self.nodes
+    def is_collide(self, ship):
+        ...
 
-    def get_outgoing_edges(self, node):
-        "Возвращает соседей узла"
-        connections = []
-        for out_node in self.nodes:
-            if self.graph[node].get(out_node, False) != False:
-                connections.append(out_node)
-        return connections
+    def is_out_pole(self, size):
+        ...
 
-    def value(self, node1, node2):
-        "Возвращает значение ребра между двумя узлами."
-        return self.graph[node1][node2]
+    def __getitem__(self, item):
+        ...
+
+    def __setitem__(self, item, val):
+        ...
+
+    def __repr__(self) -> str:
+        return f"{self._length}:({self._x},{self._y}),{self._tp}"
 
 
-def dijkstra_algorithm(graph, start_node):
-    unvisited_nodes = list(graph.get_nodes())
-
-    # Мы будем использовать этот словарь, чтобы сэкономить на посещении каждого узла и обновлять его по мере продвижения по графику
-    shortest_path = {}
-
-    # Мы будем использовать этот dict, чтобы сохранить кратчайший известный путь к найденному узлу
-    previous_nodes = {}
-
-    # Мы будем использовать max_value для инициализации значения "бесконечности" непосещенных узлов
-    max_value = sys.maxsize
-    for node in unvisited_nodes:
-        shortest_path[node] = max_value
-    # Однако мы инициализируем значение начального узла 0
-    shortest_path[start_node] = 0
-
-    # Алгоритм выполняется до тех пор, пока мы не посетим все узлы
-    while unvisited_nodes:
-        # Приведенный ниже блок кода находит узел с наименьшей оценкой
-        current_min_node = None
-        for node in unvisited_nodes:  # Iterate over the nodes
-            if current_min_node == None:
-                current_min_node = node
-            elif shortest_path[node] < shortest_path[current_min_node]:
-                current_min_node = node
-
-        # Приведенный ниже блок кода извлекает соседей текущего узла и обновляет их расстояния
-        neighbors = graph.get_outgoing_edges(current_min_node)
-        for neighbor in neighbors:
-            tentative_value = shortest_path[current_min_node] + graph.value(
-                current_min_node, neighbor
-            )
-            if tentative_value < shortest_path[neighbor]:
-                shortest_path[neighbor] = tentative_value
-                # We also update the best path to the current node
-                previous_nodes[neighbor] = current_min_node
-
-        # После посещения его соседей мы отмечаем узел как "посещенный"
-        unvisited_nodes.remove(current_min_node)
-
-    return previous_nodes, shortest_path
+# ---------------------
 
 
-def print_result(previous_nodes, shortest_path, start_node, target_node):
-    path = []
-    node = target_node
+class GamePole:
+    SHIPS = [
+        Ship(4, tp=randint(1, 2)),
+        Ship(3, tp=randint(1, 2)),
+        Ship(3, tp=randint(1, 2)),
+        Ship(2, tp=randint(1, 2)),
+        Ship(2, tp=randint(1, 2)),
+        Ship(2, tp=randint(1, 2)),
+        Ship(1, tp=randint(1, 2)),
+        Ship(1, tp=randint(1, 2)),
+        Ship(1, tp=randint(1, 2)),
+        Ship(1, tp=randint(1, 2)),
+    ]
 
-    while node != start_node:
-        path.append(node)
-        node = previous_nodes[node]
+    def __init__(self, size) -> None:
+        self._size = size
+        self._ships = []
 
-    # Добавить начальный узел вручную
-    path.append(start_node)
+    def init(self):
+        self.temp_pole = [[0 for i in range(self._size)] for j in range(self._size)]
+        for ship in self.SHIPS:
+            self._ships.append(self._add_ships(ship))
 
-    print(
-        "Найден следующий лучший маршрут с ценностью {}.".format(
-            shortest_path[target_node]
-        )
-    )
-    print(" -> ".join(reversed(path)))
+    def _check_point(self, x, y):
+        if all([0 <= x < self._size, 0 <= y < self._size]) and (
+            self.temp_pole[x][y] == 0
+        ):
+            return True
+        return False
+
+    def _add_ships(self, ship):
+        s = (1, 0)
+        if ship._tp == 2:
+            s = (0, 1)
+        while True:
+            a, b = randint(0, self._size), randint(0, self._size)
+            if self._check_point(a + ship._length * s[0], b + ship._length * s[1]):
+                return Ship(length=ship._length, x=a, y=b, tp=ship._tp)
+
+    # def _ship_constructor(self, x, y, ship: Ship) -> Ship:
+    #     s = (1, 0)
+    #     if ship._tp == 2:
+    #         s = (0, 1)
+    #     for e in range(ship._length):
+    #         self.temp_pole[x + e * s[0]][y + e * s[1]] = 1
+    #     return Ship(ship._length, x=x, y=y, tp=ship._tp)
+
+    def get_ships(self):
+        return self._ships
+
+    def move_ships(self):
+        ...
+
+    def show(self):
+        for i in range(self._size):
+            for j in range(self._size):
+                print(self.temp_pole[i][j], end=" ")
+            print("")
+
+    def get_pole(self):
+        ...
 
 
-nodes = [
-    "Reykjavik",
-    "Oslo",
-    "Moscow",
-    "London",
-    "Rome",
-    "Berlin",
-    "Belgrade",
-    "Athens",
-]
+pole = GamePole(SIZE_GAME_POLE)
+pole.init()
+# pole._add_ships()
+pole.show()
+print(pole.get_ships())
 
-init_graph = {}
-for node in nodes:
-    init_graph[node] = {}
+# ------------------------------
 
-init_graph["Reykjavik"]["Oslo"] = 5
-init_graph["Reykjavik"]["London"] = 4
-init_graph["Oslo"]["Berlin"] = 1
-init_graph["Oslo"]["Moscow"] = 3
-init_graph["Moscow"]["Belgrade"] = 5
-init_graph["Moscow"]["Athens"] = 4
-init_graph["Athens"]["Belgrade"] = 1
-init_graph["Rome"]["Berlin"] = 2
-init_graph["Rome"]["Athens"] = 2
 
-graph = Graph(nodes, init_graph)
-
-previous_nodes, shortest_path = dijkstra_algorithm(graph=graph, start_node="Moscow")
-print(shortest_path)
-print_result(previous_nodes, shortest_path, start_node="Moscow", target_node="London")
+class SeaBattle:
+    ...
