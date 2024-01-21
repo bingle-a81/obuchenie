@@ -13,20 +13,30 @@ class Ship:
         self._is_move = True
         self._cells = [1 for x in range(self._length)]
         self._orient = self._set_tp()
-        if (x is not None) and (y is not None):
+        self._x,self._y=x,y
+        if self._x is not None and self._y is not None:
             self.set_start_coords(x, y)
 
     def _set_tp(self):
-        res = (1, 0)
+        res = (0, 1)
         if self._tp == 2:
-            res = (0, 1)
+            res = (1, 0)
         return res
 
     def set_start_coords(self, x, y):
+        a,b=self._x,self._y
         self._x = x
         self._y = y
-        if self not in self.ship_lst:
-            self.ship_lst.append(self)
+        if self.is_out_pole(SIZE_GAME_POLE) == False:            
+            if self.is_collide(self) == False:
+                self._x = x
+                self._y = y
+                self.ship_lst.append(self)
+                return
+        self._x = a
+        self._y = b    
+
+            
 
     def get_start_coords(self):
         return (self._x, self._y)
@@ -58,14 +68,6 @@ class Ship:
                 return True
         ship.set_start_coords(a,b)
         return False
-
-        # if all(
-        #     lst[self._x + e * self._orient[0]][self._y + e * self._orient[1]] == 0
-        #     for e in range(self._length)
-        # ):
-
-        # else:
-        #     return True
 
     def is_out_pole(self, size):
         for e in range(self._length):
@@ -145,9 +147,9 @@ class GamePole:
         return False
 
     def _add_ships(self, ship) -> tuple:
-        s = (1, 0)
+        s = (0, 1)
         if ship._tp == 2:
-            s = (0, 1)
+            s = (1, 0)
         while True:
             a, b = randint(0, self._size), randint(0, self._size)
             if all(
@@ -168,9 +170,9 @@ class GamePole:
     def show(self):
         temp_pole = [[0 for i in range(self._size)] for j in range(self._size)]
         for ship in self.get_ships():
-            s = (1, 0)
+            s = (0, 1)
             if ship._tp == 2:
-                s = (0, 1)
+                s = (1, 0)
             for e in range(ship._length):
                 x, y = ship.get_start_coords()
                 temp_pole[x + e * s[0]][y + e * s[1]] = ship[e]
@@ -183,9 +185,9 @@ class GamePole:
     def get_pole(self):
         temp_pole = [[0 for i in range(self._size)] for j in range(self._size)]
         for ship in self.get_ships():
-            s = (1, 0)
+            s = (0, 1)
             if ship._tp == 2:
-                s = (0, 1)
+                s = (1,0)
             for e in range(ship._length):
                 x, y = ship.get_start_coords()
                 temp_pole[x + e * s[0]][y + e * s[1]] = ship[e]
@@ -225,9 +227,11 @@ assert ship._x == 1 and ship._y == 2, "неверно отработал мет�
 assert ship.get_start_coords() == (1, 2), "неверно отработал метод get_start_coords()"
 
 ship.move(1)
+
 s1 = Ship(4, 1, 0, 0)
 s2 = Ship(3, 2, 0, 0)
 s3 = Ship(3, 2, 0, 2)
+
 
 assert s1.is_collide(s2), "неверно работает метод is_collide() для кораблей Ship(4, 1, 0, 0) и Ship(3, 2, 0, 0)"
 assert s1.is_collide(s3) == False, "неверно работает метод is_collide() для кораблей Ship(4, 1, 0, 0) и Ship(3, 2, 0, 2)"
