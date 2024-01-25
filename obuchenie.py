@@ -1,16 +1,21 @@
+class TupleLimit(tuple):
+    def __new__(cls, *args, **kwargs):
+        if len(args[0]) > args[1]:
+            raise ValueError('число элементов коллекции превышает заданный предел')
+        return super().__new__(cls, args[0])
+        
+    def __init__(self,lst,max) -> None:
+         super().__init__()
+         self.lst=lst
 
 
-def input_int_numbers():
-    try:
-        return tuple(map(int, input().split()))
-    except:
-        raise TypeError("все числа должны быть целыми")
+    def __str__(self) -> str:
+        return ' '.join(str(float(x)) for x in self.lst)
 
 
-while True:
-    try:
-        print(*input_int_numbers())
-        break
-    except:
-        continue
+digits = list(map(float, input().split()))  # эту строчку не менять (коллекцию digits также не менять)
 
+try:
+    print(TupleLimit(digits,2))
+except ValueError as z:
+    print(z)
