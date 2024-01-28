@@ -195,7 +195,7 @@ class GamePole:
         return tmp_tuple
         
 
-
+quit(-1)
 
 # pole = GamePole(SIZE_GAME_POLE)
 # pole.init()

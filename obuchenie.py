@@ -1,14 +1,12 @@
-class LimitException(Exception):
-    """Превышение лимита"""
+class A:
+    def __init__(self,word) -> None:
+        self.word=word
+        self.__getattribute__(word)()
 
+    def go(self):
+        print('go')
 
-class ServerLimitException(LimitException):
-    """Превышение нагрузки на сервер"""
+    def stop(self):
+        print('stop')
 
-
-try:
-    raise ServerLimitException("превышение серверной нагрузки")
-except LimitException:
-    print("LimitException")
-except ServerLimitException:
-    print("ServerLimitException")
+a=A('stop')
