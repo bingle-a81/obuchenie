@@ -1,45 +1,18 @@
-class ConnectionError(Exception):
-    ...
+class PrinterError(Exception):
+    """Класс общих ошибок принтера"""
 
 
-class DatabaseConnection:
-    def __init__(self) -> None:
-        self._fl_connection_open = False
-
-    def connect(self, login, password):
-        self._fl_connection_open = True
-        raise ConnectionError
-
-    def close(self):
-        self._fl_connection_open = False
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        if exc_type is None:
-            return True
-        self.close()
-        return False
+class PrinterConnectionError(PrinterError):
+    """Ошибка соединения с принтером"""
 
 
-c = DatabaseConnection()
+class PrinterPageError(PrinterError):
+    """Ошибка отсутствия бумаги в принтере"""
+
 
 try:
-    c.connect("aaa", "bbb")
-except ConnectionError:
-    assert c._fl_connection_open
-else:
-    assert False, "не сгенерировалось исключение ConnectionError"
-
-try:
-    with DatabaseConnection() as conn:
-        conn.connect("aaa", "bbb")
-except ConnectionError:
-    assert True
-else:
-    assert False, "не сгенерировалось исключение ConnectionError"
-
-assert (
-    conn._fl_connection_open == False
-), "атрибут _fl_connection_open принимает значение True, а должно быть False"
+    raise PrinterConnectionError("соединение с принтером отсутствует")
+except (PrinterConnectionError, PrinterPageError) as e:
+    print(e)
+except PrinterError as e:
+    print(e)
