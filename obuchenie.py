@@ -1,3 +1,5 @@
-import re
+import hashlib
 
-pat = r"(?:.{5}"
+match "hello world":
+    case "hello world" as f:
+        print(hashlib.sha256(f.encode()).hexdigest())
