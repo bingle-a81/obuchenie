@@ -1,7 +1,12 @@
-import numpy as np
-# Создаем массив целых чисел
-arr = np.array(input(),dtype=None)
-print(arr)
-# Преобразуем его в массив с плавающей точкой
-arr_float = arr.astype(float)
-print(arr_float) # out: [1. 2. 3. 4. 5.]
+import logging
+
+logging.basicConfig(level=10)
+a_log=logging.getLogger()
+print(a_log)
+
+ch=logging.StreamHandler()
+ch.setLevel(30)
+a_log.addHandler(ch)
+a_log.warning('jklo')
+
+print(a_log.handlers)
