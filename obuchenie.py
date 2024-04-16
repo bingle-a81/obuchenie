@@ -1,2 +1,8 @@
-a=-1*(2**16)/2
-print(a)
+import sec1
+import fr
+
+
+
+if __name__ == '__main__':
+    sec1.d()
+
