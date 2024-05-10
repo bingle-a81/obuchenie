@@ -13,5 +13,4 @@ for i in ls:
 else:
     a.append([i] * a1)
 
-
 print(a)
