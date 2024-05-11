@@ -1,16 +1,11 @@
-st = "g i v e t h h i i s m a a a n a g u u n"
-ls = st.split()
-a = []
-i1 = ls[0]
-a1 = 0
-for i in ls:
-    if i == i1:
-        a1 += 1
-    else:
-        a.append([i1] * a1)
-        a1 = 1
-    i1 = i
-else:
-    a.append([i] * a1)
+st = 's t e p i k r o c k s'.split()
+
+a = [[]]
+
+for i in range(len(st)):
+    for j in range(len(st)):
+        result = st[j:i + j + 1]
+        if len(result) == i + 1:
+            a.append(result)
 
 print(a)
