@@ -1,11 +1,10 @@
-st = 's t e p i k r o c k s'.split()
+n=int(input())
+a=0
+st=[list(map(int,input().split())) for i in range(n)]
 
-a = [[]]
-
-for i in range(len(st)):
-    for j in range(len(st)):
-        result = st[j:i + j + 1]
-        if len(result) == i + 1:
-            a.append(result)
+for i in range(n):
+    for j in range(n):
+        if i==j:
+            a+=st[i][j]
 
 print(a)
