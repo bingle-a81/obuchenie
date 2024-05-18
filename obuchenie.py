@@ -1,25 +1,43 @@
 # n = int(input())
-n:int = 4
-a1 = a2 = a3 = a4 = 0
+# n:int = 4
+# st: list[list[int]] = [list(map(int, input().split())) for i in range(n)]
+# k,l=list(map(int,input().split()))
+# print(k,l)
 
-# st = [list(map(int, input().split())) for i in range(n)]
-st = [[1, 2, 3, 4], [5, 6, 7, 8], [3, 4, 5, 6], [1, 2, 3, 4]]
+# l=int(input())
 
-maxi: int = st[0][0]
+
+
+
+n:int = 3
+# m=4
+# k=0
+# l=2
+st: list[list[int]] = [[1, 2, 3],
+                        [2, 6, 7],
+                          [3,7,11]]
+a1=False
 for i in range(n):
     for j in range(n):
-        if i < j and i < n - 1 - j:
-            a1 += st[i][j]
-        elif i < j and i > n - 1 - j:
-            a2 += st[i][j]
-        elif i > j and i > n - 1 - j:
-            a3 += st[i][j]
-        elif i > j and i < n - 1 - j:
-            a4 += st[i][j]
+        if st[i][j]!=st[j][i]:
+            a1=True
+            break
+        else:
+            continue
+    if a1:
+        break
 
-print(
-    f"""Верхняя четверть: {a1}
-Правая четверть: {a2}
-Нижняя четверть: {a3}
-Левая четверть: {a4}"""
-)
+
+print(('YES','NO')[a1])
+
+
+
+
+# for i in range(n):
+#     for j in range(n):
+#         a: int=str(st[i][j]).rjust(2)
+#         print(a, end=' ')
+#     print()
+
+        
+
