@@ -6,31 +6,34 @@
 
 # l=int(input())
 
+# n = 3
+# st: list[list[int]] = [[1, 2, 3], 
+#                        [4, 5, 6],
+#                          [7, 8, 9]]
+n=int(input())
+st = [list(map(int, input().split())) for i in range(n)]
+r_matrix=[[[0] for i in range(n)] for j in range(n)]
 
-
-
-n:int = 3
-# m=4
-# k=0
-# l=2
-st: list[list[int]] = [[1, 2, 3],
-                        [2, 6, 7],
-                          [3,7,11]]
-a1=False
 for i in range(n):
     for j in range(n):
-        if st[i][j]!=st[j][i]:
-            a1=True
-            break
-        else:
-            continue
-    if a1:
-        break
+        r_matrix[j][n - i - 1] =  st[i][j]
+
+# n=int(input())
+# st = [list(map(int, input().split())) for i in range(n)]
+# st.reverse()
 
 
-print(('YES','NO')[a1])
+for i in range(n):
+    for j in range(n):
+        print(r_matrix[i][j], end=" ")
+    print()
 
 
+
+# for i in range(n):
+#     for j in range(n):
+#         st[i][j], st[n - i - 1][i] = st[n - i - 1][i], st[i][j]
+# print(('YES','NO')[a1])
 
 
 # for i in range(n):
@@ -38,6 +41,3 @@ print(('YES','NO')[a1])
 #         a: int=str(st[i][j]).rjust(2)
 #         print(a, end=' ')
 #     print()
-
-        
-
