@@ -1,18 +1,18 @@
+import numpy as np
 
-n,m=map(int,input().split())
-st=[['t']*m for _ in range(n)]
+n,m=2,4
 
-for i in range(n):
-    for j in range(m):
-        if (i%2==0 and j%2==0) or (i%2==1 and j%2==1):
-            st[i][j]='.'
-        else:
-            st[i][j]='*'
+st1=np.empty((n,m),dtype=int)
+st1[0]=list((map(int, input().split())))
 
-for i in range(n):
-    for j in range(m):
-        print(st[i][j], end=" ")
-    print()
+for i in range(n-1): 
+    st1[i]=list((map(int, input().split())))
+
+# for i in st1:
+#     print(*i)
+print(st1)
+
+
 
 
 
