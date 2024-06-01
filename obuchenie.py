@@ -1,20 +1,5 @@
-import numpy as np
-
-n,m=2,4
-
-st1=np.empty((n,m),dtype=int)
-st1[0]=list((map(int, input().split())))
-
-for i in range(n-1): 
-    st1[i]=list((map(int, input().split())))
-
-# for i in st1:
-#     print(*i)
-print(st1)
-
-
-
-
+countries = ('Russia', 'Argentina', 'Slovakia', 'Canada', 'Slovenia', 'Italy', 'Spain', 'Ukraine', 'Chile', 'Cameroon')
+print(countries[0:-3:1])
 
 quit(-1)
 n = 4
