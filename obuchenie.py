@@ -1,7 +1,7 @@
-myset = set()
+myset1 = set()
 for i in range(10):
     if i % 2 == 0:
-        myset.add('even')
+        myset1.add('even')
     else:
-        myset.add('odd')
-print((myset))
+        myset1.add('odd')
+print((myset1))
