@@ -1,26 +1,13 @@
-from itertools import count
+n = int(input())
+d = {}
+for i in range(n):
+    a, *b = input().split()
+    d[a] = b
 
-
-s = "a b c a a d c".split()
-# print(s)
-
-
-def outer():
-    c = 0
-    def inner():
-        nonlocal c
-        c = c + 1
-        return c
-
-    return inner
-
-
-ls = []
-co=outer()
-
-for x in s:
-    if x in ls:
-        a =co()
-        print(f'{x} {a}')
-    ls.append(x)
-print(ls)
+j = int(input())
+for i in range(j):
+    s = input()
+    for k, v in d.items():
+        if s in v:
+            print(k)
+            break
