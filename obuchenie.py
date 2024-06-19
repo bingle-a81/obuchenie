@@ -1,13 +1,26 @@
-n = int(input())
-d = {}
-for i in range(n):
-    a, *b = input().split()
-    d[a] = b
+s=input()
 
-j = int(input())
-for i in range(j):
-    s = input()
-    for k, v in d.items():
-        if s in v:
-            print(k)
-            break
+d1={}
+for x in s:
+    d1.setdefault(x,0)
+    d1[x]+=1
+
+n=int(input())
+d={}
+for i in range(n):
+    a,b=input().split(':')
+    d[int(b)]=a
+
+ls=[]
+for i in s:
+    ls.append(d.get(d1.get(i)))
+
+print(*ls,sep='')
+
+
+
+
+
+
+
+
