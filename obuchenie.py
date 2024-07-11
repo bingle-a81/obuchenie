@@ -1,15 +1,13 @@
 import re
 
-s = """G0 X-0.400 Z10.000
-G1 Z0.000
-G1 X19.600
-G2 X19.883 Z0.059 R0.200
-G1 X34.025 Z7.130
-G2 X34.089 Z7.171 R0.200
-G1 X44.089 Z15.831
-G2 X44.136 Z15.897 R0.200
-G1 X47.609 Z25.745
-G0 X67.609
+s = """G0 X-0.400 Z-10.000
+G1 Z-0.000
+G1 X1.470
+G2 X1.811 Z0.096 R0.200
+G1 X4.621 Z2.388
+G2 X4.680 Z2.493 R0.200
+G1 Z4.888
+G0 X24.680
 """
 p = r"(\w)([\d\-\.]+)"
 ls: list[dict[str, float]] = [
@@ -41,16 +39,8 @@ for i in range(1, len(ls)):
     ls_lines_points.append(line)
 
 
-print(ls_lines_points)
-# x11 = 0
-# y11 = 20
-# x12 = 5
-# y12 = 20
+# print(ls_lines_points)
 
-# x21 = 20
-# y21 = 20
-# x22 = 28
-# y22 = 21
 
 
 def new_func(line1: tuple, line2: tuple) -> tuple[float, float]:
@@ -95,13 +85,7 @@ def new_func(line1: tuple, line2: tuple) -> tuple[float, float]:
     return res_x, res_y
 
 
-x, y = new_func((-0.2, 10.0, -0.2, 0.0), (-0.2, 0.0, 9.8, 0.0))
-
-# print(x, y)
 for i in range(1, len(ls_lines_points)):
     print(new_func(ls_lines_points[i - 1], ls_lines_points[i]))
 
 
-# print(new_func((-0.2, 0.0, 9.8, 0.0), (10.0, 0.2, 10.0, 10.117)))
-
-# print(new_func((1, 0.0, 5.0, 0.0), (10.000, 5.0, 10.0, 9.0)))
