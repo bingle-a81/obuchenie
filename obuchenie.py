@@ -9,6 +9,7 @@ G2 X4.680 Z2.493 R0.200
 G1 Z4.888
 G0 X24.680
 """
+sp: str = ""
 p = r"(\w)([\d\-\.]+)"
 ls: list[dict[str, float]] = [
     {x[0]: float(x[1]) for x in re.findall(p, x)} for x in s.splitlines()
@@ -39,8 +40,8 @@ for i in range(1, len(ls)):
     ls_lines_points.append(line)
 
 
-# print(ls_lines_points)
 
+# print(ls_lines_points)
 
 
 def new_func(line1: tuple, line2: tuple) -> tuple[float, float]:
@@ -86,6 +87,7 @@ def new_func(line1: tuple, line2: tuple) -> tuple[float, float]:
 
 
 for i in range(1, len(ls_lines_points)):
-    print(new_func(ls_lines_points[i - 1], ls_lines_points[i]))
+    x,y=new_func(ls_lines_points[i - 1], ls_lines_points[i])
+    print(x,y)
 
 
